@@ -1,0 +1,8 @@
+<b>Pravila igre:</b>
+Igramo na šahovnici, velikosti 8 x 8, kjer so črna in bela polja. Figure so postavljene samo na črnih poljih. 
+Vsak igralec ima po 12 figur črne ali bele barve. Igralec, ki ima črne figure vedno začne.
+Figure se premikajo diagonalno naprej.
+Če je figura drugega igralca na sosednjem diagonalnem polju in je diagonalno za njim prazno polje, potem lahko to figuro 'poješ', lastno figuro pa premakneš za dve diagonalni polji naprej, v smeri, kjer si 'pojedel' figuro.
+Če prideš s figuro do drugega konca igralnega polja, tvoja figura postane dama, ki se lahko premika diagonalno v vse smeri.
+Igralec zmaga, ko 'poje' nasprotniku vse figure oz. nasprotniku prepreči izvedbo katerekoli poteze.
+
