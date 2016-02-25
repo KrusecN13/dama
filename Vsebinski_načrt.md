@@ -1,4 +1,4 @@
-Pravila igre:
+# Pravila igre: <h1>
   
 Igramo na šahovnici, velikosti 8 x 8, kjer so črna in bela polja. Figure so postavljene samo na črnih poljih. 
 Vsak igralec ima po 12 figur črne ali bele barve. Igralec, ki ima črne figure vedno začne.
