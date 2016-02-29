@@ -1,5 +1,4 @@
 # IGRA DAMA: <h1>
-
 Projekt igrica dama je namenjen razvijanju znanja pri predmetu Programiranje 2. Projekt bo napisan v programu python z grafičnim vmesnikom tkinter.
 
 Igro bosta lahko igrala dva igralca ali en proti računalniku.
