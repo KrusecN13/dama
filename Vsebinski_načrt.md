@@ -8,7 +8,7 @@
 
 * Prvo potezo izvede igralec s črnimi figurami
 * Običajne figure se premikajo diagonalno naprej
-* Če je figura drugega igralca na sosednjem diagonalnem polju v smeri nasprotnika, in je diagonalno za njim prazno polje, potem lahko to figuro 'poješ', kar pomeni: lastno figuro pa premakneš za dve diagonalni polji naprej, v smeri, kjer si pojedel nasprotnikovo figuro, to pa odstraniš z igralnega polja
+* Če je figura drugega igralca na sosednjem diagonalnem polju v smeri nasprotnika, in je diagonalno za njim prazno polje, potem lahko to figuro 'poješ', kar pomeni: lastno figuro pa premakneš za dve diagonalni polji naprej v smeri, kjer si pojedel nasprotnikovo figuro, to pa odstraniš z igralnega polja
 * Če z lastno figuro prideš do drugega konca igralnega polja, tvoja figura postane dama. Ta se sme premikati in jesti tudi diagonalno nazaj
 
 ## Pogoj za zmago: <h2>
