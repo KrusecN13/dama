@@ -15,3 +15,38 @@
 
 * Igralec zmaga, ko poje nasprotniku vse figure oziroma nasprotniku prepreči izvedbo katerekoli poteze. Vedno je nekdo zmagovalec, izenačenja ni.
 
+## Struktura programa:
+
+## Razredi: <h1>
+
+# Metode uporabniškega vmesnika GUI: <h2>
+Vmesnik bo vseboval metode, s katerimi bo risal poteze na ploščo:
+igralec_na_potezi(self) 
+začni_igro(self) 
+nariši_potezo(self,i,j)
+koncaj(self,z)
+
+# Igralci in njihovi razredi <h2>
+Igra proti računalniku bo vsebovala dva algoritma, enega namerno neizpopolnjenega in lažjega (Minimax) in pa bolj dodelanega (alfa-beta rezanje). Tretja možnost je, da je igralec človek, v tem primeru mu podelimo možnost izvajanja poteze prek uporabniškega vmesnika.
+* class Minimax 
+* class Alfa_beta
+* class clovek
+__init__(self, gui) 
+povleci(self)
+
+# Splošna struktura igre: <h2>
+* class Igra
+premakni_ali_pojej(self,i,j)
+(self,i,j)
+razveljavi(self)
+na_potezi(self)
+veljavnost_poteze(self)
+vse_veljavne(self)
+zmagovalec(self)
+
+
+
+
+
+
+
