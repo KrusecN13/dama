@@ -21,31 +21,27 @@ Program je napisan s programom Python 3, njegov uporabniški vmesik pa uporablja
 ## Razredi: <h2>
 
 ### Razred GUI: <h3>
-Metode uporabniškega vmesnika GUI:
-Vmesnik bo vseboval metode, s katerimi bo risal poteze na ploščo:
-igralec_na_potezi(self) 
-začni_igro(self) 
-nariši_potezo(self,i,j)
-koncaj(self,z)
+Vmesnik bo vseboval metode, s katerimi bo risal poteze na platno. Celotni razred skupaj z metodami bo vsebovan v (glavni) datoteki dama.py. Uporabljene metode bodo:
+* izbira_igralca(self)
+* zacni_igro(self)
+* premakni_figuro(self,i,j)
+* koncaj_igro(self, zmagovalec)
 
 ### Igralci in njihovi razredi: <h3>
-Igra proti računalniku bo vsebovala dva algoritma, enega namerno neizpopolnjenega in lažjega (Minimax) in pa bolj dodelanega (alfa-beta rezanje). Tretja možnost je, da je igralec človek, v tem primeru mu podelimo možnost izvajanja poteze prek uporabniškega vmesnika.
+Igra proti računalniku bo vsebovala dva algoritma, enega namerno neizpopolnjenega in lažjega (Minimax) in pa bolj dodelanega (alfa-beta rezanje). Tretja možnost je, da je igralec človek, v tem primeru mu podelimo možnost izvajanja poteze preko uporabniškega vmesnika. Razredi igralcev bodo:
 * class Minimax 
 * class Alfa_beta
-* class clovek
-__init__(self, gui) 
-povleci(self)
+* class clovek, ki bo imel metodi:
+    * __init__(self, gui), ki se bo povezala z uporabniškim vmesnikom, 
+    * premakni(self)
 
-### Splošna struktura igre: <h3>
-* class Igra
-poteza(self,i,j):
-premakni(self,i,j)
-pojej(self,i,j)
-razveljavi(self)
-na_potezi(self)
-veljavnost_poteze(self)
-vse_veljavne(self)
-zmagovalec(self)
+### Razred Igra: <h3>
+Metode znotraj razreda Igra bodo:
+* naredi_potezo(self,i,j), ki se bo razdelila na podmetodi premakni(self,i,j) in pojej(self,i,j)
+* razveljavi(self)
+* na_potezi(self)
+* je_veljavna(self,i,j)
+* zmagovalec(self)
 
 
 
