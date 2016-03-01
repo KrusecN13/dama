@@ -36,8 +36,9 @@ povleci(self)
 
 ## Splošna struktura igre: <h2>
 * class Igra
-premakni_ali_pojej(self,i,j)
-(self,i,j)
+poteza(self,i,j):
+premakni(self,i,j)
+pojej(self,i,j)
 razveljavi(self)
 na_potezi(self)
 veljavnost_poteze(self)
