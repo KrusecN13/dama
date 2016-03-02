@@ -5,13 +5,8 @@
 ##* premakni_figuro(self,i,j)
 ##* koncaj_igro(self, zmagovalec)
 ##
-###### Igralci in njihovi razredi: <h4>
-##Igra proti računalniku bo vsebovala dva algoritma, enega namerno neizpopolnjenega in lažjega (Minimax) in pa bolj dodelanega (alfa-beta rezanje). Tretja možnost je, da je igralec človek, v tem primeru mu podelimo možnost izvajanja poteze preko uporabniškega vmesnika. Razredi igralcev bodo:
-##* class Minimax 
-##* class Alfa_beta
-##* class clovek, ki bo imel metodi:
-##    * __init__(self, gui), ki se bo povezala z uporabniškim vmesnikom, 
-##    * premakni(self)
+
+
 ##
 ###### Razred Igra: <h4>
 ##Metode znotraj razreda Igra bodo:
@@ -41,7 +36,7 @@ class Igra():
                       [B, False, B, False, B, False, B, False],
                       [False, B, False, B, False, B, False, B]]
         
-        #self.na_potezi = IGRALEC_C
+        self.na_potezi = crni
         self.zgodovina = self.deska
         
     def shrani_potezo(self):
@@ -65,9 +60,44 @@ class Igra():
     
     def zmagovalec(self):
         pass
-    def naredi_potezo(self, i, j):
+    
+    def pojej(self, i, j):
         pass
+    
+    def premakni(self, i, j):
+        pass
+    
+    def naredi_potezo(self, i, j):
+    # če je poteza neveljavna ne naredi ničesar
+        if not je_veljavna(self, i, j):
+            return None
+    # če je poteza veljavna jo izvede
+        
+##########################            
+
+###### Igralci in njihovi razredi: <h4>
+##Igra proti računalniku bo vsebovala dva algoritma, enega namerno neizpopolnjenega in lažjega (Minimax) in pa bolj dodelanega (alfa-beta rezanje). Tretja možnost je, da je igralec človek, v tem primeru mu podelimo možnost izvajanja poteze preko uporabniškega vmesnika. Razredi igralcev bodo:
+##* class Minimax 
+##* class Alfa_beta
+##* class clovek, ki bo imel metodi:
+##    * __init__(self, gui), ki se bo povezala z uporabniškim vmesnikom, 
+##    * premakni(self)
+
+class Clovek():
+    def __init__(self, gui):
+        self.gui = gui
+    def premakni(self):
+        pass
+
+class Minimax():
+    pass
+
+class Alfa_Beta():
+    pass
             
+##########################
+
+
     
 
 
