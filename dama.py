@@ -1,12 +1,3 @@
-###### Razred GUI: <h4>
-##Vmesnik bo vseboval metode, s katerimi bo risal poteze na platno. Celotni razred skupaj z metodami bo vsebovan v (glavni) datoteki dama.py. Uporabljene metode bodo:
-##* izbira_igralca(self)
-##* zacni_igro(self)
-##* premakni_figuro(self,i,j)
-##* koncaj_igro(self, zmagovalec)
-##
-
-
 ##
 ###### Razred Igra: <h4>
 ##Metode znotraj razreda Igra bodo:
