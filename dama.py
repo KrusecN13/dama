@@ -21,27 +21,53 @@
 ##* je_veljavna(self,i,j)
 ##* zmagovalec(self)
 
+
+
+##class Figura():
+##    def __init__(self, barva, dama = False, vrstica, stolpec):
+##        self.barva = barva
+##        
+        
+
+
 class Igra():
     def __init__(self):
-        self.deska = [[C, None, C, None, C, None, C, None],
-                      [None, C, None, C, None, C, None, C],
-                      [C, None, C, None, C, None, C, None],
-                      [None,None,None,None,None,None,None,None]
-                      [None,None,None,None,None,None,None,None]
-                      [B, None, B, None, B, None, B, None]
-                      [None, B, None, B, None, B, None, B]
-                      [B, None, B, None, B, None, B, None]]
+        self.deska = [[C, False, C, False, C, False, C, False],
+                      [False, C, False, C, False, C, False, C],
+                      [C, False, C, False, C, False, C, False],
+                      [False,None,False,None,False,None,False,None],
+                      [None,False,None,False,None,False,None,False],
+                      [False, B, False, B, False, B, False, B],
+                      [B, False, B, False, B, False, B, False],
+                      [False, B, False, B, False, B, False, B]]
+        
+        #self.na_potezi = IGRALEC_C
+        self.zgodovina = self.deska
+        
     def shrani_potezo(self):
-        pass
+# seznamu zgodovina pripne par (trenutna pozicija na deski, igralec na potezi)
+        self.zgodovina.append((self.deska, self.na_potezi))
+
+    
     def razveljavi(self):
-        pass
+# ce igra clovek proti cloveku se razveljavi ena poteza, sicer pa dve(SE DODATI!!)
+        (self.deska, self.na_potezi) = self.zgodovina.pop()
+
+# pop odstrani zadnji element seznama
 
     def je_veljavna(self, i, j):
-        pass
+        for i in range(8):
+            for j in range(8):
+                if self.zgodovina[-1][i][j] == None:
+                    return True
+        return False
+
+    
     def zmagovalec(self):
         pass
     def naredi_potezo(self, i, j):
         pass
+            
     
 
 
