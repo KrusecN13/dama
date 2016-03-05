@@ -6,22 +6,38 @@
 ##* koncaj_igro(self, zmagovalec)
 ##
 
-import tkinter
+from Tkinter import *
 #import dama
-
-class Gui():
-##        def __init__(self, master):
-##            pass
+#Definiramo razred, ki predstavlja naöo aplikacijo
+class Gui(Frame):
+       def __init__(self, master=None):
+            Frame.__init__(self,master)
+            self.pack #funkcija, ki izraËuna velikost okna
+            self.createWidgets
+            pass
+        
+       def createWidgets(self):
+            self.polje = tk.Button(self)#naredi gumb
+            self.polje["command"] = self.premakni ## premakni bo funkcija iz kode,
+            ##ki bo premaknila figuro, vsakic ko se gumb pritisne se sproûi funkcija
+##            self.polje.pack(side=## kje vse morajo bit gumbi?
+##            self.Igraj = tk.Button(self, text = "Igraj novo!", fg="blue",
+##                                   command=root.#razveljavitev celotne igre
+##                                   ##in zaËetek nove
+##
+##            self.Quit = tk.Button(self, text = "KonËaj igro", fg="red",
+##                                  command=root.destroy)
+##            self.Quit.pack(side= ##kjer bo gumb za konec"
 ##
 ##    # igralno obmoƒçje
 ##            self.deska = tkinter.Canvas(master, width=500, height=500)
 ##            self.deska.grid(row=1,column=1)
 ##            
-    pass
+              
 
-   
-root = tkinter.Tk()
+#GLAVNI PROGRAM
+root = Tk()
 root.title("Dama")
 aplikacija = Gui()
-root.mainloop()
+root.mainloop()## JURE: si zihr, da je root.mainloop, al ni aplikacija.mainloop? :)
 # more bit Gui(root), sam pi≈°e da nima argumentov
