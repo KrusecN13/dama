@@ -1,5 +1,7 @@
 ###### Razred GUI: <h4>
-##Vmesnik bo vseboval metode, s katerimi bo risal poteze na platno. Celotni razred skupaj z metodami bo vsebovan v (glavni) datoteki dama.py. Uporabljene metode bodo:
+##Vmesnik bo vseboval metode, s katerimi bo risal poteze na platno.
+#Celotni razred skupaj z metodami bo vsebovan v (glavni) datoteki dama.py.
+#Uporabljene metode bodo:
 ##* izbira_igralca(self)
 ##* zacni_igro(self)
 ##* premakni_figuro(self,i,j)
@@ -9,35 +11,40 @@
 from Tkinter import *
 #import dama
 #Definiramo razred, ki predstavlja naöo aplikacijo
-class Gui(Frame):
-       def __init__(self, master=None):
-            Frame.__init__(self,master)
-            self.pack #funkcija, ki izraËuna velikost okna
-            self.createWidgets
-            pass
-        
-       def createWidgets(self):
-            self.polje = tk.Button(self)#naredi gumb
-            self.polje["command"] = self.premakni ## premakni bo funkcija iz kode,
-            ##ki bo premaknila figuro, vsakic ko se gumb pritisne se sproûi funkcija
-##            self.polje.pack(side=## kje vse morajo bit gumbi?
-##            self.Igraj = tk.Button(self, text = "Igraj novo!", fg="blue",
-##                                   command=root.#razveljavitev celotne igre
-##                                   ##in zaËetek nove
-##
-##            self.Quit = tk.Button(self, text = "KonËaj igro", fg="red",
-##                                  command=root.destroy)
-##            self.Quit.pack(side= ##kjer bo gumb za konec"
-##
-##    # igralno obmoƒçje
-##            self.deska = tkinter.Canvas(master, width=500, height=500)
-##            self.deska.grid(row=1,column=1)
-##            
-              
+class Plosca():
+        def __init__(self, master=None):
+           self.canvas = Canvas(master, width=1000, height=1000)
+           self.canvas.pack()
+           for x in range(0,1000,125):
+               for y in range(0,1000,125):
+                   if (x+y) % 2 == 0:
+                       self.canvas.create_rectangle(x+125,y+125,
+                                                    x,y,
+                                                    outline="#000000", fill="#000000")
 
-#GLAVNI PROGRAM
+                   else:
+                       self.canvas.create_rectangle(x+125,y+125,
+                                                    x,y,
+                                                    outline="#ffffff", fill="#ffffff")
+##           self.beli = Button(master, text="beli") 
+##           for x in range(125/2,1000, 125):
+##                for y in range(125/2,250 + 125/2, 125):
+##                     if (x+y) % 2 == 0:
+##                         self.beli.grid(row=x, column=y)
+##       ta del öe ne dela                  
+                    
+                    
+
+        #naredi öahovsko ploöËo
+        def premakni(self):
+           pass
+            
+            
+
+
+ #GLAVNI PROGRAM
 root = Tk()
 root.title("Dama")
-aplikacija = Gui()
-root.mainloop()## JURE: si zihr, da je root.mainloop, al ni aplikacija.mainloop? :)
+aplikacija = Plosca()
+root.mainloop()
 # more bit Gui(root), sam pi≈°e da nima argumentov
