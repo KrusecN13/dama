@@ -82,14 +82,36 @@ class Igra():
         ipsilon = self.y
         zeta = druga.x
         teta = druga.y
-##        if self.dama:
-##            
-##            if abs(self.x - i)==1 and abs(self.y - j) == 1 and 0<=i<=7 and 0<=j<=7
-##            and :
-##                self.x = i
-##                self.y = j
-##                zbrisi(iks, ipsilon)
-        if self.barva == crna:
+        if self.dama:
+            if self.barva != druga.barva:
+                if self.x - druga.x == 1 and (self.y + 1) == druga.y and self.deska[self.x -2 ][self.y +2] == None:
+                    self.x = iks - 2
+                    self.y = ipsilon + 2
+                    
+                    zbrisi(iks, ipsilon)
+                    zbrisi(zeta, teta)
+                elif self.x - druga.x == -1 and (self.y + 1) == druga.y and self.deska[self.x + 2][self.y +2] == None:
+                    self.x = iks + 2
+                    self.y = ipsilon + 2
+                    
+                    zbrisi(iks, ipsilon)
+                    zbrisi(zeta, teta)
+                elif self.x - druga.x == 1 and (self.y - 1) == druga.y and self.deska[self.x -2 ][self.y -2] == None:
+                    self.x = iks - 2
+                    self.y = ipsilon - 2
+                    
+                    zbrisi(iks, ipsilon)
+                    zbrisi(zeta, teta)
+                elif self.x - druga.x == -1 and (self.y - 1) == druga.y and self.deska[self.x + 2][self.y -2] == None:
+                    self.x = iks + 2
+                    self.y = ipsilon - 2
+                    
+                    zbrisi(iks, ipsilon)
+                    zbrisi(zeta, teta)
+                
+
+        
+        elif self.barva == crna:
             if druga.barva == bela:
                 if self.x - druga.x == 1 and (self.y + 1) == druga.y and self.deska[self.x -2 ][self.y +2] == None:
                     self.x = iks - 2
@@ -97,13 +119,13 @@ class Igra():
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
-                if self.x - druga.x == -1 and (self.y + 1) == druga.y and self.deska[self.x + 2][self.y +2] == None:
+                elif self.x - druga.x == -1 and (self.y + 1) == druga.y and self.deska[self.x + 2][self.y +2] == None:
                     self.x = iks + 2
                     self.y = ipsilon + 2
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
-        if self.barva == bela:
+        elif self.barva == bela:
             if druga.barva == crna:
                 if self.x - druga.x == 1 and (self.y - 1) == druga.y and self.deska[self.x -2 ][self.y -2] == None:
                     self.x = iks - 2
@@ -111,12 +133,14 @@ class Igra():
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
-                if self.x - druga.x == -1 and (self.y - 1) == druga.y and self.deska[self.x + 2][self.y -2] == None:
+                elif self.x - druga.x == -1 and (self.y - 1) == druga.y and self.deska[self.x + 2][self.y -2] == None:
                     self.x = iks + 2
                     self.y = ipsilon - 2
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
+        else:
+            assert False, "Figura ne more pojesti"
                 
             
 
@@ -127,9 +151,7 @@ class Igra():
     def premakni(self, i, j):
         iks = self.x
         ipsilon = self.y
-        if not je_veljavna(self, i, j):
-            return None
-        
+
         if self.dama:
             if abs(self.x - i)==1 and abs(self.y - j) == 1 and 0<=i<=7 and 0<=j<=7:
                 self.x = i
@@ -152,12 +174,15 @@ class Igra():
 
                    
     
-    def naredi_potezo(self, i, j):
+    def naredi_potezo(self, druga):
     # če je poteza neveljavna ne naredi ničesar
+    # če je poteza veljavna jo izvede
         if not je_veljavna(self, i, j):
             return None
         
-    # če je poteza veljavna jo izvede
+        
+        
+    
 
 
 
