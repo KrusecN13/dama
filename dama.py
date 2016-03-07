@@ -9,12 +9,26 @@
 
 
 
-##class Figura():
-##    def __init__(self, barva, dama = False, vrstica, stolpec):
-##        self.barva = barva
-##        
+class Figura():
+    def __init__(self, x, y, barva, dama = False):
+        self.x = x
+        self.y = y
+        self.barva = barva
+        self.dama = dama
         
+        
+igralec_C = "C"
+igralec_B = "B"
 
+def nasprotnik(igralec):
+    if igralec == igralec_C:
+        return igralec_B
+    elif igralec == igralec_B:
+        return igralec_C
+    else:
+        assert False
+    
+    
 
 class Igra():
     def __init__(self):
@@ -27,8 +41,8 @@ class Igra():
                       [B, False, B, False, B, False, B, False],
                       [False, B, False, B, False, B, False, B]]
         
-        self.na_potezi = crni
-        self.zgodovina = self.deska
+        self.na_potezi = igralec_C
+        self.zgodovina = [(self.deska, igralec_C)]
         
     def shrani_potezo(self):
 # seznamu zgodovina pripne par (trenutna pozicija na deski, igralec na potezi)
