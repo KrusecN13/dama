@@ -44,11 +44,28 @@ class Igra():
         
         self.na_potezi = igralec_C
         self.zgodovina = [(self.deska, igralec_C)]
+
+        # seznam vseh belih in crnih figur
+        bele = []
+        for i in range(8):
+            for j in range(8):
+                if self.deska[i][j] == 'B':
+                    f = Figura(i,j,bela)
+                    bele.append(f)
+
+        crne = []
+        for i in range(8):
+            for j in range(8):
+                if self.deska[i][j] == 'C':
+                    f = Figura(i,j,crna)
+                    crne.append(f)
+        
         
     def shrani_potezo(self):
 # seznamu zgodovina pripne par (trenutna pozicija na deski, igralec na potezi)
         a = [self.deska[j][:] for j in range(8)]
         self.zgodovina.append((a, self.na_potezi))
+        
 
     
     def razveljavi(self):
@@ -74,68 +91,79 @@ class Igra():
         return False
 
     
-    def zmagovalec(self):
-        pass
-    
-    def pojej(self, druga):
-        iks = self.x
-        ipsilon = self.y
+##    def stanje(self):
+##        # ugotovi, ali že imamo zmagovalca in ga vrne, oz.
+##        # poklièe funkcijo naredi_potezo
+##        for i in self.deska:
+##            for j in i:
+##                if not naredi_potezi(nasprotnik(self.na_potezi)):
+##                    return 
+##                        
+##        
+        
+###?? kako bi ustvarila seznam vseh belih/crnih figur?
+## (da bi lahko klicala funkcijo na seznamu vseh figur ene barve)
+    def pojej(self, prva, druga):
+
+# seznama bele in črne ustrezno spremeni
+        iks = prva.x
+        ipsilon = prva.y
         zeta = druga.x
         teta = druga.y
-        if self.dama:
-            if self.barva != druga.barva:
-                if self.x - druga.x == 1 and (self.y + 1) == druga.y and self.deska[self.x -2 ][self.y +2] == None:
-                    self.x = iks - 2
-                    self.y = ipsilon + 2
+        if prva.dama:
+            if prva.barva != druga.barva:
+                if prva.x - druga.x == 1 and (prva.y + 1) == druga.y and prva.deska[self.x -2 ][prva.y +2] == None:
+                    prva.x = iks - 2
+                    prva.y = ipsilon + 2
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
-                elif self.x - druga.x == -1 and (self.y + 1) == druga.y and self.deska[self.x + 2][self.y +2] == None:
-                    self.x = iks + 2
-                    self.y = ipsilon + 2
+                elif prva.x - druga.x == -1 and (prva.y + 1) == druga.y and prva.deska[self.x + 2][prva.y +2] == None:
+                    prva.x = iks + 2
+                    prva.y = ipsilon + 2
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
-                elif self.x - druga.x == 1 and (self.y - 1) == druga.y and self.deska[self.x -2 ][self.y -2] == None:
-                    self.x = iks - 2
-                    self.y = ipsilon - 2
+                elif prva.x - druga.x == 1 and (prva.y - 1) == druga.y and prva.deska[prva.x -2 ][prva.y -2] == None:
+                    prva.x = iks - 2
+                    prva.y = ipsilon - 2
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
-                elif self.x - druga.x == -1 and (self.y - 1) == druga.y and self.deska[self.x + 2][self.y -2] == None:
-                    self.x = iks + 2
-                    self.y = ipsilon - 2
+                elif prva.x - druga.x == -1 and (prva.y - 1) == druga.y and prva.deska[prva.x + 2][prva.y -2] == None:
+                    prva.x = iks + 2
+                    prva.y = ipsilon - 2
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
                 
 
         
-        elif self.barva == crna:
+        elif prva.barva == crna:
             if druga.barva == bela:
-                if self.x - druga.x == 1 and (self.y + 1) == druga.y and self.deska[self.x -2 ][self.y +2] == None:
-                    self.x = iks - 2
-                    self.y = ipsilon + 2
+                if prva.x - druga.x == 1 and (prva.y + 1) == druga.y and prva.deska[prva.x -2 ][prva.y +2] == None:
+                    prva.x = iks - 2
+                    prva.y = ipsilon + 2
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
-                elif self.x - druga.x == -1 and (self.y + 1) == druga.y and self.deska[self.x + 2][self.y +2] == None:
-                    self.x = iks + 2
-                    self.y = ipsilon + 2
+                elif prva.x - druga.x == -1 and (prva.y + 1) == druga.y and prva.deska[prva.x + 2][prva.y +2] == None:
+                    prva.x = iks + 2
+                    prva.y = ipsilon + 2
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
-        elif self.barva == bela:
+        elif prva.barva == bela:
             if druga.barva == crna:
-                if self.x - druga.x == 1 and (self.y - 1) == druga.y and self.deska[self.x -2 ][self.y -2] == None:
-                    self.x = iks - 2
-                    self.y = ipsilon - 2
+                if prva.x - druga.x == 1 and (prva.y - 1) == druga.y and prva.deska[prva.x -2 ][prva.y -2] == None:
+                    prva.x = iks - 2
+                    prva.y = ipsilon - 2
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
-                elif self.x - druga.x == -1 and (self.y - 1) == druga.y and self.deska[self.x + 2][self.y -2] == None:
-                    self.x = iks + 2
-                    self.y = ipsilon - 2
+                elif prva.x - druga.x == -1 and (prva.y - 1) == druga.y and prva.deska[prva.x + 2][prva.y -2] == None:
+                    prva.x = iks + 2
+                    prva.y = ipsilon - 2
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
@@ -148,28 +176,43 @@ class Igra():
     def zbrisi(self,i,j):
         self.deska[i][j] = None
         
-    def premakni(self, i, j):
-        iks = self.x
-        ipsilon = self.y
+        
+    def premakni(self, figura, i, j):
 
-        if self.dama:
-            if abs(self.x - i)==1 and abs(self.y - j) == 1 and 0<=i<=7 and 0<=j<=7:
-                self.x = i
-                self.y = j
-                zbrisi(iks, ipsilon)    
-                
-                
-        elif self.barva == crna:
-            if abs(self.x - i)==1 and (self.y + 1) == j and 0<=i<=7 and 0<=j<=7:
-                self.x = i
-                self.y = j
+        iks = figura.x
+        ipsilon = figura.y
+
+        if figura.dama:
+            if abs(figura.x - i)==1 and abs(figura.y - j) == 1 and 0<=i<=7 and 0<=j<=7:
+                figura.x = i
+                figura.y = j
                 zbrisi(iks, ipsilon)
+                if figura.barva == crna:
+                    self.deska[i][j] = igralec_C
+                elif figura.barva == bela:
+                    self.deska[i][j] = igralec_B
+                
+                
+        elif figura.barva == crna:
+            if abs(figura.x - i)==1 and (figura.y + 1) == j and 0<=i<=7 and 0<=j<=7:
+                figura.x = i
+                figura.y = j
+                zbrisi(iks, ipsilon)
+                self.deska[i][j] = igralec_C
 
-        elif self.barva == bela:
-            if abs(self.x - i)==1 and (self.y - 1) == j and 0<=i<=7 and 0<=j<=7:
-                self.x = i
-                self.y = j
-                zbrisi(iks, ipsilon)            
+        elif figura.barva == bela:
+            if abs(figura.x - i)==1 and (figura.y - 1) == j and 0<=i<=7 and 0<=j<=7:
+                figura.x = i
+                figura.y = j
+                zbrisi(iks, ipsilon)
+                self.deska[i][j] = igralec_B
+# seznama bele in črne ustrezno spremeni                
+        if figura.bela:
+            bele.remove(Figura(iks,ipsilon,bela))
+            bele.append(Figura(figura.x,figura.y,bela))
+        if figura.crna:
+            crne.remove(Figura(iks,ipsilon,bela))
+            crne.append(Figura(figura.x,figura.y,bela))
                 
 
                    
