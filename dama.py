@@ -118,6 +118,8 @@ class Igra():
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
+
+                    
                 elif prva.x - druga.x == -1 and (prva.y + 1) == druga.y and prva.deska[self.x + 2][prva.y +2] == None:
                     prva.x = iks + 2
                     prva.y = ipsilon + 2
@@ -130,13 +132,27 @@ class Igra():
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
+
                 elif prva.x - druga.x == -1 and (prva.y - 1) == druga.y and prva.deska[prva.x + 2][prva.y -2] == None:
                     prva.x = iks + 2
                     prva.y = ipsilon - 2
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
+                if prva.barva == crna:
+                    self.deska[prva.x][prva.y] = igralec_C
+                elif prva.barva == bela:
+                    self.deska[prva.x][prva.y] = igralec_B
+                if prva.bela:
+                    bele.remove(Figura(iks,ipsilon,bela))
+                    crne.remove(Figura(zeta,teta,crna))
+                    bele.append(Figura(prva.x,prva.y,bela))
+                elif prva.crna:
+                    crne.remove(Figura(iks,ipsilon,bela))
+                    bele.remove(Figura(zeta,teta,crna))
+                    crne.append(Figura(prva.x,prva.y,bela))
                 
+
 
         
         elif prva.barva == crna:
@@ -153,6 +169,10 @@ class Igra():
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
+                self.deska[prva.x][prva.y] = igralec_C
+                crne.remove(Figura(iks,ipsilon,bela))
+                bele.remove(Figura(zeta,teta,crna))
+                crne.append(Figura(prva.x,prva.y,bela))
         elif prva.barva == bela:
             if druga.barva == crna:
                 if prva.x - druga.x == 1 and (prva.y - 1) == druga.y and prva.deska[prva.x -2 ][prva.y -2] == None:
@@ -167,6 +187,11 @@ class Igra():
                     
                     zbrisi(iks, ipsilon)
                     zbrisi(zeta, teta)
+                self.deska[prva.x][prva.y] = igralec_B
+                bele.remove(Figura(iks,ipsilon,bela))
+                crne.remove(Figura(zeta,teta,crna))
+                bele.append(Figura(prva.x,prva.y,bela))
+        
         else:
             assert False, "Figura ne more pojesti"
                 
