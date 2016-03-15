@@ -7,19 +7,15 @@
 ##* je_veljavna(self,i,j)
 ##* zmagovalec(self)
 
-
+igralec_C = "crni"
+igralec_B = "beli"
 
 class Figura():
-    def __init__(self, x, y, barva, dama = False):
-        self.x = x
-        self.y = y
-        self.barva = barva
+    def __init__(self, barva, dama = False):
+        self.barva = (crna or bela)
         self.dama = dama
         
         
-igralec_C = "C"
-igralec_B = "B"
-
 def nasprotnik(igralec):
     if igralec == igralec_C:
         return igralec_B
@@ -28,39 +24,36 @@ def nasprotnik(igralec):
     else:
         assert False
     
-    
+
 
 class Igra():
     def __init__(self):
-        self.deska = [[C, False, C, False, C, False, C, False],
-                      [False, C, False, C, False, C, False, C],
-                      [C, False, C, False, C, False, C, False],
+        self.deska = [[Figura(crna), False, Figura(crna), False, Figura(crna), False, Figura(crna), False],
+                      [False, Figura(crna), False, Figura(crna), False, Figura(crna), False, Figura(crna)],
+                      [Figura(crna), False, Figura(crna), False, Figura(crna), False, Figura(crna), False],
                       [False,None,False,None,False,None,False,None],
                       [None,False,None,False,None,False,None,False],
-                      [False, B, False, B, False, B, False, B],
-                      [B, False, B, False, B, False, B, False],
-                      [False, B, False, B, False, B, False, B]]
+                      [False, Figura(bela), False, Figura(bela),False, Figura(bela), False, Figura(bela)],
+                      [Figura(bela), False, Figura(bela), False, Figura(bela), False, Figura(bela), False],
+                      [False, Figura(bela), False, Figura(bela),False, Figura(bela), False, Figura(bela)]]
         
         
         self.na_potezi = igralec_C
         self.zgodovina = [(self.deska, igralec_C)]
 
-        # seznam vseh belih in crnih figur
-        bele = []
+        self.figure = []
         for i in range(8):
             for j in range(8):
-                if self.deska[i][j] == 'B':
-                    f = Figura(i,j,bela)
-                    bele.append(f)
+                if self.deska[i][j] is not None and not False:
+                    self.figure.append(self.deska[i][j])
+        print(self.figure)
+                    
 
-        crne = []
-        for i in range(8):
-            for j in range(8):
-                if self.deska[i][j] == 'C':
-                    f = Figura(i,j,crna)
-                    crne.append(f)
+
+
+
         
-        
+    
     def shrani_potezo(self):
 # seznamu zgodovina pripne par (trenutna pozicija na deski, igralec na potezi)
         a = [self.deska[j][:] for j in range(8)]
@@ -78,18 +71,42 @@ class Igra():
 # pop odstrani zadnji element seznama
 
     def kopija(self):
-        copy = Igra()
-        copy.deska = [self.deska[j][:] for j in range(8)]
-        copy.na_potezi = self.na_potezi
-        return copy
+        kopy = Igra()
+        kopy.deska = [self.deska[j][:] for j in range(8)]
+        kopy.na_potezi = self.na_potezi
+        return kopy
 
-    def je_veljavna(self, i, j):
+    def veljavne_poteze(self, figura):
+        premakni = []
+        pojej = []
+        figura = Figura(barva)
         for i in range(8):
             for j in range(8):
-                if self.zgodovina[-1][i][j] == None:
-                    return True
-        return False
-
+                if figura.barva == crna :
+                    if 0 <= (i-2) <= 7 and 0 <= (j+2) <= 7 and self.deska[i-2][j+2] == None and self.deska[i-1][j+1] == Figura(bela):
+                        pojej.append((i,j), (i-2, j+2))
+                    if 0 <= (i+2) <= 7 and 0 <= (j+2) <= 7 and self.deska[i+2][j+2] == None and self.deska[i+1][j+1] == Figura(bela):
+                        pojej.append((i,j), (i+2, j+2))
+                    
+                    if 0 <= (i-1) <= 7 and 0 <= (j+1) <= 7 and self.deska[i-1][j+1] == None:
+                        premakni.append((i,j), (i-1, j+1))
+                    if 0 <= (i+1) <= 7 and 0 <= (j+1) <= 7 and self.deska[i+1][j+1] == None:
+                        premakni.append((i,j), (i+1, j+1))
+                        
+                if figura.barva == bela :
+                    if 0 <= (i-2) <= 7 and 0 <= (j-2) <= 7 and self.deska[i-2][j-2] == None and self.deska[i-1][j-1] == Figura(bela):
+                        pojej.append((i,j), (i-2, j-2))
+                    if 0 <= (i+2) <= 7 and 0 <= (j-2) <= 7 and self.deska[i+2][j-2] == None and self.deska[i+1][j-1] == Figura(bela):
+                        pojej.append((i,j), (i+2, j-2))
+                    
+                    if 0 <= (i-1) <= 7 and 0 <= (j-1) <= 7 and self.deska[i-1][j-1] == None:
+                        premakni.append((i,j), (i-1, j-1))
+                    if 0 <= (i+1) <= 7 and 0 <= (j-1) <= 7 and self.deska[i+1][j-1] == None:
+                        premakni.append((i,j), (i+1, j-1))
+                    
+                    
+                    
+  
     
 ##    def stanje(self):
 ##        # ugotovi, ali že imamo zmagovalca in ga vrne, oz.
@@ -101,144 +118,13 @@ class Igra():
 ##                        
 ##        
         
-###?? kako bi ustvarila seznam vseh belih/crnih figur?
-## (da bi lahko klicala funkcijo na seznamu vseh figur ene barve)
-    def pojej(self, prva, druga):
-
-# seznama bele in črne ustrezno spremeni
-        iks = prva.x
-        ipsilon = prva.y
-        zeta = druga.x
-        teta = druga.y
-        if prva.dama:
-            if prva.barva != druga.barva:
-                if prva.x - druga.x == 1 and (prva.y + 1) == druga.y and prva.deska[self.x -2 ][prva.y +2] == None:
-                    prva.x = iks - 2
-                    prva.y = ipsilon + 2
-                    
-                    zbrisi(iks, ipsilon)
-                    zbrisi(zeta, teta)
-
-                    
-                elif prva.x - druga.x == -1 and (prva.y + 1) == druga.y and prva.deska[self.x + 2][prva.y +2] == None:
-                    prva.x = iks + 2
-                    prva.y = ipsilon + 2
-                    
-                    zbrisi(iks, ipsilon)
-                    zbrisi(zeta, teta)
-                elif prva.x - druga.x == 1 and (prva.y - 1) == druga.y and prva.deska[prva.x -2 ][prva.y -2] == None:
-                    prva.x = iks - 2
-                    prva.y = ipsilon - 2
-                    
-                    zbrisi(iks, ipsilon)
-                    zbrisi(zeta, teta)
-
-                elif prva.x - druga.x == -1 and (prva.y - 1) == druga.y and prva.deska[prva.x + 2][prva.y -2] == None:
-                    prva.x = iks + 2
-                    prva.y = ipsilon - 2
-                    
-                    zbrisi(iks, ipsilon)
-                    zbrisi(zeta, teta)
-                if prva.barva == crna:
-                    self.deska[prva.x][prva.y] = igralec_C
-                elif prva.barva == bela:
-                    self.deska[prva.x][prva.y] = igralec_B
-                if prva.bela:
-                    bele.remove(Figura(iks,ipsilon,bela))
-                    crne.remove(Figura(zeta,teta,crna))
-                    bele.append(Figura(prva.x,prva.y,bela))
-                elif prva.crna:
-                    crne.remove(Figura(iks,ipsilon,bela))
-                    bele.remove(Figura(zeta,teta,crna))
-                    crne.append(Figura(prva.x,prva.y,bela))
-                
-
-
-        
-        elif prva.barva == crna:
-            if druga.barva == bela:
-                if prva.x - druga.x == 1 and (prva.y + 1) == druga.y and prva.deska[prva.x -2 ][prva.y +2] == None:
-                    prva.x = iks - 2
-                    prva.y = ipsilon + 2
-                    
-                    zbrisi(iks, ipsilon)
-                    zbrisi(zeta, teta)
-                elif prva.x - druga.x == -1 and (prva.y + 1) == druga.y and prva.deska[prva.x + 2][prva.y +2] == None:
-                    prva.x = iks + 2
-                    prva.y = ipsilon + 2
-                    
-                    zbrisi(iks, ipsilon)
-                    zbrisi(zeta, teta)
-                self.deska[prva.x][prva.y] = igralec_C
-                crne.remove(Figura(iks,ipsilon,bela))
-                bele.remove(Figura(zeta,teta,crna))
-                crne.append(Figura(prva.x,prva.y,bela))
-        elif prva.barva == bela:
-            if druga.barva == crna:
-                if prva.x - druga.x == 1 and (prva.y - 1) == druga.y and prva.deska[prva.x -2 ][prva.y -2] == None:
-                    prva.x = iks - 2
-                    prva.y = ipsilon - 2
-                    
-                    zbrisi(iks, ipsilon)
-                    zbrisi(zeta, teta)
-                elif prva.x - druga.x == -1 and (prva.y - 1) == druga.y and prva.deska[prva.x + 2][prva.y -2] == None:
-                    prva.x = iks + 2
-                    prva.y = ipsilon - 2
-                    
-                    zbrisi(iks, ipsilon)
-                    zbrisi(zeta, teta)
-                self.deska[prva.x][prva.y] = igralec_B
-                bele.remove(Figura(iks,ipsilon,bela))
-                crne.remove(Figura(zeta,teta,crna))
-                bele.append(Figura(prva.x,prva.y,bela))
-        
-        else:
-            assert False, "Figura ne more pojesti"
-                
-            
+    
 
             
     def zbrisi(self,i,j):
         self.deska[i][j] = None
+                  
         
-        
-    def premakni(self, figura, i, j):
-
-        iks = figura.x
-        ipsilon = figura.y
-
-        if figura.dama:
-            if abs(figura.x - i)==1 and abs(figura.y - j) == 1 and 0<=i<=7 and 0<=j<=7:
-                figura.x = i
-                figura.y = j
-                zbrisi(iks, ipsilon)
-                if figura.barva == crna:
-                    self.deska[i][j] = igralec_C
-                elif figura.barva == bela:
-                    self.deska[i][j] = igralec_B
-                
-                
-        elif figura.barva == crna:
-            if abs(figura.x - i)==1 and (figura.y + 1) == j and 0<=i<=7 and 0<=j<=7:
-                figura.x = i
-                figura.y = j
-                zbrisi(iks, ipsilon)
-                self.deska[i][j] = igralec_C
-
-        elif figura.barva == bela:
-            if abs(figura.x - i)==1 and (figura.y - 1) == j and 0<=i<=7 and 0<=j<=7:
-                figura.x = i
-                figura.y = j
-                zbrisi(iks, ipsilon)
-                self.deska[i][j] = igralec_B
-# seznama bele in črne ustrezno spremeni                
-        if figura.bela:
-            bele.remove(Figura(iks,ipsilon,bela))
-            bele.append(Figura(figura.x,figura.y,bela))
-        if figura.crna:
-            crne.remove(Figura(iks,ipsilon,bela))
-            crne.append(Figura(figura.x,figura.y,bela))
-                
 
                    
     
@@ -256,6 +142,8 @@ class Igra():
 
 
 
+##k = Igra()
+##k.figure
 
 
         
@@ -284,7 +172,8 @@ class Alfa_Beta():
 ##########################
 
 
-    
+
+
 
 
 
