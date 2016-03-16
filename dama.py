@@ -7,8 +7,10 @@
 ##* je_veljavna(self,i,j)
 ##* zmagovalec(self)
 
-igralec_C = "crni"
-igralec_B = "beli"
+igralec_C = "crna"
+igralec_B = "bela"
+NI_KONEC = "ni konec"
+
 
 class Figura():
     def __init__(self, barva, dama = False):
@@ -103,36 +105,25 @@ class Igra():
                         premakni.append((i,j), (i-1, j-1))
                     if 0 <= (i+1) <= 7 and 0 <= (j-1) <= 7 and self.deska[i+1][j-1] == None:
                         premakni.append((i,j), (i+1, j-1))
-                    
+        return (pojej, premakni)
                     
                     
   
     
-##    def stanje(self):
-##        # ugotovi, ali že imamo zmagovalca in ga vrne, oz.
-##        # poklièe funkcijo naredi_potezo
-##        for i in self.deska:
-##            for j in i:
-##                if not naredi_potezi(nasprotnik(self.na_potezi)):
-##                    return 
-##                        
-##        
+    def stanje(self):
+        # ugotovi, ali že imamo zmagovalca in ga vrne, oz.
+       
+        if veljavne_poteze() == ([],[]):
+            return nasprotnik(self.na_potezi)
+        else:
+            return (NI_KONEC)
         
-    
-
-            
-    def zbrisi(self,i,j):
-        self.deska[i][j] = None
-                  
-        
-
                    
     
-    def naredi_potezo(self, druga):
+    def naredi_potezo(self,figura):
     # če je poteza neveljavna ne naredi ničesar
     # če je poteza veljavna jo izvede
-        if not je_veljavna(self, i, j):
-            return None
+        
         
         
         
