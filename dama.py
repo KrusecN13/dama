@@ -7,22 +7,22 @@
 ##* je_veljavna(self,i,j)
 ##* zmagovalec(self)
 
-igralec_C = "crna"
-igralec_B = "bela"
+
 NI_KONEC = "ni konec"
 
 
 class Figura():
-    def __init__(self, barva, dama = False):
-        self.barva = (crna or bela)
+    def __init__(self, igralec, dama = False):
+        self.igralec = igralec
         self.dama = dama
+    #def __repr__
         
         
 def nasprotnik(igralec):
-    if igralec == igralec_C:
-        return igralec_B
-    elif igralec == igralec_B:
-        return igralec_C
+    if igralec == igrC:
+        return igrB
+    elif igralec == igrB:
+        return igrC
     else:
         assert False
     
@@ -30,28 +30,28 @@ def nasprotnik(igralec):
 
 class Igra():
     def __init__(self):
-        self.deska = [[Figura(crna), False, Figura(crna), False, Figura(crna), False, Figura(crna), False],
-                      [False, Figura(crna), False, Figura(crna), False, Figura(crna), False, Figura(crna)],
-                      [Figura(crna), False, Figura(crna), False, Figura(crna), False, Figura(crna), False],
+
+        # None spremeniti v gui ko bo definirano
+        igrC = Clovek(None,1)
+        igrB = Clovek(None,-1)
+        self.deska = [[Figura(igrC), False, Figura(igrC), False, Figura(igrC), False, Figura(igrC), False],
+                      [False, Figura(igrC), False, Figura(igrC), False, Figura(igrC), False, Figura(igrC)],
+                      [Figura(igrC), False, Figura(igrC), False, Figura(igrC), False, Figura(igrC), False],
                       [False,None,False,None,False,None,False,None],
                       [None,False,None,False,None,False,None,False],
-                      [False, Figura(bela), False, Figura(bela),False, Figura(bela), False, Figura(bela)],
-                      [Figura(bela), False, Figura(bela), False, Figura(bela), False, Figura(bela), False],
-                      [False, Figura(bela), False, Figura(bela),False, Figura(bela), False, Figura(bela)]]
+                      [False, Figura(igrB), False, Figura(igrB),False, Figura(igrB), False, Figura(igrB)],
+                      [Figura(igrB), False, Figura(igrB), False, Figura(igrB), False, Figura(igrB), False],
+                      [False, Figura(igrB), False, Figura(igrB),False, Figura(igrB), False, Figura(igrB)]]
         
         
         self.na_potezi = igralec_C
         self.zgodovina = [(self.deska, igralec_C)]
 
-        self.figure = []
-        for i in range(8):
-            for j in range(8):
-                if self.deska[i][j] is not None and not False:
-                    self.figure.append(self.deska[i][j])
-        print(self.figure)
-                    
-
-
+##        self.figure = []
+##        for i in range(8):
+##            for j in range(8):
+##                if self.deska[i][j] is not None and not False:
+##                    self.figure.append(self.deska[i][j])
 
 
         
@@ -62,77 +62,85 @@ class Igra():
         self.zgodovina.append((a, self.na_potezi))
         
 
-    
-    def razveljavi(self):
-# ce igra clovek proti cloveku se razveljavi ena poteza, sicer pa dve(SE DODATI!!)
-        (self.deska, self.na_potezi) = self.zgodovina.pop()
-##??? ali ta funkcija ze avtomatsko vzame zadnji element 'nove' zgodovine?
-##?? ali celoten seznam zgodovine
-
-
-# pop odstrani zadnji element seznama
-
     def kopija(self):
         kopy = Igra()
         kopy.deska = [self.deska[j][:] for j in range(8)]
         kopy.na_potezi = self.na_potezi
         return kopy
 
-    def veljavne_poteze(self, figura):
+    def veljavne_poteze(self, igr):
         premakni = []
         pojej = []
-        figura = Figura(barva)
         for i in range(8):
             for j in range(8):
-                if figura.barva == crna :
-                    if 0 <= (i-2) <= 7 and 0 <= (j+2) <= 7 and self.deska[i-2][j+2] == None and self.deska[i-1][j+1] == Figura(bela):
-                        pojej.append((i,j), (i-2, j+2))
-                    if 0 <= (i+2) <= 7 and 0 <= (j+2) <= 7 and self.deska[i+2][j+2] == None and self.deska[i+1][j+1] == Figura(bela):
-                        pojej.append((i,j), (i+2, j+2))
+                if self.deska[i][j].igralec == igr :
+                    if 0 <= (i-2) <= 7 and 0 <= (j+2*igr.smer) <= 7 and self.deska[i-2][j+2*igr.smer] == None and self.deska[i-1][j+1*igr.smer] == Figura(nasprotnik(igr)):
+                        pojej.append((i,j), (i-2, j+2*igr.smer))
+                    if 0 <= (i+2) <= 7 and 0 <= (j+2*igr.smer) <= 7 and self.deska[i+2][j+2*igr.smer] == None and self.deska[i+1][j+1*igr.smer] == Figura(nasprotnik(igr)):
+                        pojej.append((i,j), (i+2, j+2*igr.smer))
                     
-                    if 0 <= (i-1) <= 7 and 0 <= (j+1) <= 7 and self.deska[i-1][j+1] == None:
-                        premakni.append((i,j), (i-1, j+1))
-                    if 0 <= (i+1) <= 7 and 0 <= (j+1) <= 7 and self.deska[i+1][j+1] == None:
-                        premakni.append((i,j), (i+1, j+1))
-                        
-                if figura.barva == bela :
-                    if 0 <= (i-2) <= 7 and 0 <= (j-2) <= 7 and self.deska[i-2][j-2] == None and self.deska[i-1][j-1] == Figura(bela):
-                        pojej.append((i,j), (i-2, j-2))
-                    if 0 <= (i+2) <= 7 and 0 <= (j-2) <= 7 and self.deska[i+2][j-2] == None and self.deska[i+1][j-1] == Figura(bela):
-                        pojej.append((i,j), (i+2, j-2))
-                    
-                    if 0 <= (i-1) <= 7 and 0 <= (j-1) <= 7 and self.deska[i-1][j-1] == None:
-                        premakni.append((i,j), (i-1, j-1))
-                    if 0 <= (i+1) <= 7 and 0 <= (j-1) <= 7 and self.deska[i+1][j-1] == None:
-                        premakni.append((i,j), (i+1, j-1))
+                    if 0 <= (i-1) <= 7 and 0 <= (j+1*igr.smer) <= 7 and self.deska[i-1][j+1*igr.smer] == None:
+                        premakni.append((i,j), (i-1, j+1*igr.smer))
+                    if 0 <= (i+1) <= 7 and 0 <= (j+1*igr.smer) <= 7 and self.deska[i+1][j+1*igr.smer] == None:
+                        premakni.append((i,j), (i+1, j+1*igr.smer))
+            
         return (pojej, premakni)
                     
                     
   
     
     def stanje(self):
-        # ugotovi, ali že imamo zmagovalca in ga vrne, oz.
-       
-        if veljavne_poteze() == ([],[]):
-            return nasprotnik(self.na_potezi)
+        # ugotovi, ali že imamo zmagovalca in ga vrne, oz. sporoèi da še ni konec igre
+        (pojej, premakni) = veljavne_poteze(nasprotnik(igr))
+        if pojej == [] and premakni ==[]:
+            return self.na_potezi
         else:
             return (NI_KONEC)
         
                    
     
-    def naredi_potezo(self,figura):
+    def naredi_potezo(self,p,r):
     # če je poteza neveljavna ne naredi ničesar
     # če je poteza veljavna jo izvede
+    # p so stare koordinate(kjer figura stoji), r so nove(kamor se hoèe premakniti)
+        (p1,p2) = p
+        (r1, r2) = r
+        (pojej, premakni) = veljavne_poteze(igr)
+        for i in pojej:
+            if (p,r) == i:
+                self.shrani_potezo()
+                self.deska[r1][r2] = self.deska[p1][p2]
+                self.deska[p1][p2] = None
+                self.deska[(p1+r1)/2][(p2+r2)/2] = None
+                zmagovalec = self.stanje()
+                if zmagovalec == NI_KONEC:
+                    self.na_potezi = nasprotnik(self.na_potezi)
+                else:
+                    self.na_potezi = None
+                    return zmagovalec
+        for j in premakni:
+            if (p,r) == i:
+                self.shrani_potezo()
+                self.deska[r1][r2] = self.deska[p1][p2]
+                self.deska[p1][p2] = None
+                zmagovalec = self.stanje()
+                if zmagovalec == NI_KONEC:
+                    self.na_potezi = nasprotnik(self.na_potezi)
+                else:
+                    self.na_potezi = None
+                    return zmagovalec
+        return None
+            
+                               
+
+                                                                                                                                                                  
+                                                                                                                                                          
+
+
+                                                                                                                                                          
+
+
         
-        
-        
-        
-    
-
-
-
-
-
 ##k = Igra()
 ##k.figure
 
@@ -149,8 +157,9 @@ class Igra():
 ##    * premakni(self)
 
 class Clovek():
-    def __init__(self, gui):
+    def __init__(self, gui, smer):
         self.gui = gui
+        self.smer = smer
     def premakni(self):
         pass
 
