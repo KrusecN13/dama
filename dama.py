@@ -113,6 +113,11 @@ class Igra():
                 self.deska[p1][p2] = None
                 self.deska[(p1+r1)/2][(p2+r2)/2] = None
                 zmagovalec = self.stanje()
+                for a in range(8):
+                    if r1 == 1 and self.deska[r1][r2].igralec == igrB:
+                        self.deska[r1][r2].dama = True
+                        
+                        
                 if zmagovalec == NI_KONEC:
                     self.na_potezi = nasprotnik(self.na_potezi)
                 else:
@@ -124,12 +129,17 @@ class Igra():
                 self.deska[r1][r2] = self.deska[p1][p2]
                 self.deska[p1][p2] = None
                 zmagovalec = self.stanje()
+                for a in range(8):
+                    if r1 == 1 and self.deska[r1][r2].igralec == igrB:
+                        self.deska[r1][r2].dama = True
                 if zmagovalec == NI_KONEC:
                     self.na_potezi = nasprotnik(self.na_potezi)
                 else:
                     self.na_potezi = None
                     return zmagovalec
         return None
+        for a in range(8):
+            if r1 == self.deska[a][1] and self.deska[r1][r2].igralec == igrB
             
                                
 
