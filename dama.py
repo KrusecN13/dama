@@ -1,3 +1,6 @@
+import threading
+import logging
+
 ##
 ###### Razred Igra: <h4>
 ##Metode znotraj razreda Igra bodo:
@@ -9,7 +12,7 @@
 
 
 NI_KONEC = "ni konec"
-
+GLOBINA = 3
 
 class Figura():
     def __init__(self, igralec, dama = False):
@@ -166,13 +169,119 @@ class Clovek():
     def klik(self,p):
         self.gui.naredi_potezo(a,p)
 
+class Racunalnik():
+    def __init__(self, gui, algoritem):
+        self.gui = gui
+        self.algoritem = algoritem
+        self.vlakno = None
+
+    def igraj(self):
+    # vzporedno vlakno ki najde najbolso potezo
+        self.vlakno = threading.Thread(
+            target = lambda: self.algoritem.najdi_potezo(self.gui.igra.kopija()))
+        
+
+        self.vlakno.start()
+
+        #vsake 100ms preveri, ali je bila najdena poteza
+        self.gui.deska.after(100, self.preveri)
+
+    def preveri(self):
+        if self.algoritem.poteza is not None:
+            self.gui.naredi_potezo(a,self.algoritem.poteza)
+            self.vlakno = None
+        else:
+            self.gui.deska.after(100, self.preveri)
+
+    def prekini(self):
+        if self.vlakno:
+            logging.debug("Prekini {0}".format(self.vlakno))
+            self.algoritem.prekini()
+            self.vlakno.join()
+            self.vlakno = None
+
+    def klik(self,p):
+        #ker igra racunalnik se ne odzove na klike
+        pass           
+        
+
+
+        
+
 class Minimax():
-    pass
+    def __init__(self, globina):
+        self.globina = globina
+        self.prekinitev = False
+        self.igra = None
+        self.jaz = None
+        self.poteza = None
+    def prekini(self):
+        self.prekinitev = True
+    def najdi_potezo(self,igra):
+        self.igra = igra
+        self.prekinitev = False
+        self.jaz = self.igra.na_potezi
+        self.poteza = None
+        (poteza,vrednost) = self.minimax(self.globina,True)
+        self.jaz = None
+        self.igra = None
+        if not self.prekinitev:
+            logging.debug("minimax: poteza {0}, vrednost {1}".format(poteza, vrednost))
+            self.poteza = poteza
+
+
+    ZMAGA = 100000
+    NESKONCNO = ZMAGA + 100
+    def vrednost_polja(self):
+        pass
+    def minimax(self, globina, maksimiziramo):
+        if self.prekinitev:
+            logging.debug ("Minimax prekinja, globina = {0}".format(globina))
+            return (None,0)
+        (zmagovalec) = self.igra.stanje()
+        if zmagovalec in (igrC,IgrB):
+            if zmagovalec == self.jaz:
+                return (None, Minimax.ZMAGA)
+            elif zmagovalec == nasprotnik(self.jaz):
+                return (None, -Minimax.ZMAGA)
+        elif zmagovalec == NI_KONEC:
+            if globina == 0:
+                return (None, self.vrednost_polja())
+            else:
+                if maksimiziramo:
+                    najboljsa_poteza = None
+                    vrednost_najboljse = -Minimax.NESKONCNO
+                    for p in self.igra.veljavne_poteze(self.jaz):
+                        self.igra.naredi_potezo(p)
+                        vrednost = self.minimax(globina-1, not maksimiziramo)[1]
+                        self.igra.razveljavi()
+                        if vrednost > vrednost_najboljse:
+                            vrednost_najboljse = vrednost
+                            najboljsa_poteza = p
+                else:
+                    najboljsa_poteza = None
+                    vrednost_najboljse = Minimax.NESKONCNO
+                    for p in self.igra.veljavne_poteze(nasprotnik(self.jaz)):
+                        self.igra.naredi_potezo(p)
+                        vrednost = self.minimax(globina-1, not maksimiziramo)[1]
+                        self.igra.razveljavi()
+                        if vrednost < vrednost_najboljse:
+                            vrednost_najboljse = vrednost
+                            najboljsa_poteza = p
+
+                assert (najboljsa_poteza in not None), "minimax: izracunana poteza je None"
+                return (najboljsa_poteza, vrednost_najboljse)
+        else:
+            assert False, "minimax: nedefinirano stanje igre"
+            
+                        
+            
+                          
 
 class Alfa_Beta():
     pass
             
-##########################
+
 
 
 
