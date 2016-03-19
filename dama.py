@@ -15,7 +15,9 @@ class Figura():
     def __init__(self, igralec, dama = False):
         self.igralec = igralec
         self.dama = dama
-    #def __repr__
+    def __repr__(self):
+        return 'Figura(%s, %s)' % (self.igralec, self.dama)
+
         
         
 def nasprotnik(igralec):
@@ -47,14 +49,6 @@ class Igra():
         self.na_potezi = igrC
         self.zgodovina = [(self.deska, igrC)]
 
-##        self.figure = []
-##        for i in range(8):
-##            for j in range(8):
-##                if self.deska[i][j] is not None and not False:
-##                    self.figure.append(self.deska[i][j])
-
-
-        
     
     def shrani_potezo(self):
 # seznamu zgodovina pripne par (trenutna pozicija na deski, igralec na potezi)
@@ -140,14 +134,7 @@ class Igra():
                     return zmagovalec
         return None
                  
-                               
-
-                                                                                                                                                                  
-                                                                                                                                                          
-
-
-                                                                                                                                                          
-
+ 
 
         
 ##k = Igra()
@@ -169,8 +156,15 @@ class Clovek():
     def __init__(self, gui, smer):
         self.gui = gui
         self.smer = smer
-    def premakni(self):
+        
+    def igraj(self):
         pass
+
+    def prekini(self):
+        pass
+
+    def klik(self,p):
+        self.gui.naredi_potezo(a,p)
 
 class Minimax():
     pass
