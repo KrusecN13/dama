@@ -1,5 +1,5 @@
 ###### Razred GUI: <h4>
-##Vmesnik bo vseboval metode, s katerimi bo risal poteze na platno.
+##Vmesnik bo vseboval metode, s katerimi bo risal poteze na platno
 #Celotni razred skupaj z metodami bo vsebovan v (glavni) datoteki dama.py.
 
 
