@@ -3,7 +3,7 @@
 #Celotni razred skupaj z metodami bo vsebovan v (glavni) datoteki dama.py.
 
 
-from tkinter import *
+from Tkinter import *
 from dama import *
 
 #Definiramo razred, ki predstavlja našo aplikacijo
@@ -50,7 +50,8 @@ class Gui():
                 canvas_ime_igralcaB = Entry(master, width = 10, textvariable = self.ime_igralcaB, background = 'orange')
                 canvas_ime_igralcaC.grid()
                 canvas_ime_igralcaB.grid()
-                
+
+                slovar_figur = {}
                 for x in range(0,800,100):
                         for y in range(0,800,100):
                                 if ((x+y)//100)%2 == 0:
@@ -62,8 +63,18 @@ class Gui():
                                        self.canvas.create_rectangle(x+(100),y+(100),
                                                     x,y,
                                                     outline="#ffffff", fill="#CD8527")
-                
-                    
+                for i in range(8):
+                        for j in range(3):
+                                if (i+j)%2 == 0:
+                                        a = self.canvas.create_oval(i*100 + 15, j*100 + 15, i*100 + 85, j*100 + 85, fill='#7D26D9', outline='#000000') 
+                                        slovar_figur[Figura('igrC')]=a
+                for i in range(8):
+                        for j in range(5,8):
+                                if (i+j)%2 == 0:
+                                        a = self.canvas.create_oval(i*100 + 15, j*100 + 15, i*100 + 85, j*100 + 85, fill='#9EB5BA', outline='#000000') 
+                                        slovar_figur[Figura('igrB')]=a
+                                        
+                print(slovar_figur)
 ##          na koncu inita: izbira igralcev (veže na funkcijo izbira_igralca,
 ##          ta dela naprej)
         

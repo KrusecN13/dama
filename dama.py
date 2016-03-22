@@ -90,7 +90,8 @@ class Igra():
   
     
     def stanje(self):
-        # ugotovi, ali že imamo zmagovalca in ga vrne, oz. sporoèi da še ni konec igre
+        
+        # ugotovi, ali ce imamo zmagovalca in ga vrne, oz. sporoci da ce ni konec igre
         (pojej, premakni) = veljavne_poteze(nasprotnik(igr))
         if pojej == [] and premakni ==[]:
             return self.na_potezi
@@ -100,9 +101,9 @@ class Igra():
                    
     
     def naredi_potezo(self,p,r):
-    # če je poteza neveljavna ne naredi ničesar
-    # če je poteza veljavna jo izvede
-    # p so stare koordinate(kjer figura stoji), r so nove(kamor se hoèe premakniti)
+    # ce je poteza neveljavna ne naredi nicesar
+    # ce je poteza veljavna jo izvede
+    # p so stare koordinate(kjer figura stoji), r so nove(kamor se hoce premakniti)
         (p1,p2) = p
         (r1, r2) = r
         (pojej, premakni) = veljavne_poteze(igr)
@@ -151,11 +152,13 @@ class Igra():
 ##########################            
 
 ###### Igralci in njihovi razredi: <h4>
-##Igra proti računalniku bo vsebovala dva algoritma, enega namerno neizpopolnjenega in lažjega (Minimax) in pa bolj dodelanega (alfa-beta rezanje). Tretja možnost je, da je igralec človek, v tem primeru mu podelimo možnost izvajanja poteze preko uporabniškega vmesnika. Razredi igralcev bodo:
+##Igra proti racunalniku bo vsebovala dva algoritma, enega namerno neizpopolnjenega in lazjega (Minimax)
+##in pa bolj dodelanega (alfa-beta rezanje). Tretja moznost je, da je igralec clovek, v tem primeru mu podelimo#
+##moznost izvajanja poteze preko uporabniskega vmesnika. Razredi igralcev bodo:
 ##* class Minimax 
 ##* class Alfa_beta
 ##* class clovek, ki bo imel metodi:
-##    * __init__(self, gui), ki se bo povezala z uporabniškim vmesnikom, 
+##    * __init__(self, gui), ki se bo povezala z uporabniskim vmesnikom, 
 ##    * premakni(self)
 
 class Clovek():
@@ -241,7 +244,7 @@ class Minimax():
 
     #najprej lociva pojej in premakni z funkcijo, potem ustvariva slovar, in vsakem kljucu, ki
     #bojo par iz tega seznama, prirediva vrednost, glede na napisano hevristiko.
-    #na koncu napiševa funkcijo, ki gre èez cel slovar in poišce najboljso vrednost
+    #na koncu napiseva funkcijo, ki gre cez cel slovar in poisce najboljso vrednost
         sez = []
         pass
         
