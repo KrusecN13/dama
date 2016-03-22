@@ -4,15 +4,53 @@
 
 
 from tkinter import *
-#import dama
+from dama import *
+
 #Definiramo razred, ki predstavlja našo aplikacijo
 class Gui():
         def __init__(self, master=None):
             #init = stvari ki se zgodijo enkrat, vse kar se more zgodit, da
             #zaženemo grafični vmesnik
+                master.configure(background = 'orange')
 
-                self.canvas = Canvas(master, width=1000, height=800)
+        #ustvarimo meni              
+                menu = Menu(master)
+                master.config(menu=menu)
+                nova_igra_menu = Menu(menu)
+                zapri_menu = Menu(menu)
+        #nariši orodno vrstico v oknu
+                menu.add_cascade(label = "Nova igra", menu = nova_igra_menu)
+                menu.add_cascade(label = "Izhod", menu = zapri_menu)
+        #s klikom na orodno vrstico izberemo moznosti
+                nova_igra_menu.add_command(label = "Clovek - Clovek",
+                                           command = lambda: self.zacni_igro(Clovek(self, self.ime_igralcaC),
+                                                                             Clovek(self, self.ime_igralcaB)))
+                nova_igra_menu.add_command(label = "Clovek - Racunalnik",
+                                           command = lambda: self.zacni_igro(Clovek(self, self.ime_igralcaC),
+                                                                             Racunalnik(self, Minimax(globina))))
+                nova_igra_menu.add_command(label = "Racunalnik - Clovek",
+                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(globina)),
+                                                                             Clovek(self, self.ime_igralcaB)))
+                nova_igra_menu.add_command(label = "Racunalnik - Racunalnik",
+                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(globina)),
+                                                                             Racunalnik(self, Minimax(globina))))
+                zapri_menu.add_command(label = "Izhod", command = master.destroy)
+
+                self.canvas = Canvas(master, width=800, height=800)
                 self.canvas.grid()
+
+                self.napis = StringVar(master, value = "Dama")
+                Label(master, textvariable = self.napis, background = 'orange').grid(row=1, column=0)
+
+
+
+                self.ime_igralcaC = StringVar(master, value = 'Crni igralec')
+                self.ime_igralcaB = StringVar(master, value = 'Beli igralec')
+                canvas_ime_igralcaC = Entry(master, width = 10, textvariable = self.ime_igralcaC, background = 'orange')
+                canvas_ime_igralcaB = Entry(master, width = 10, textvariable = self.ime_igralcaB, background = 'orange')
+                canvas_ime_igralcaC.grid()
+                canvas_ime_igralcaB.grid()
+                
                 for x in range(0,800,100):
                         for y in range(0,800,100):
                                 if ((x+y)//100)%2 == 0:
@@ -23,15 +61,8 @@ class Gui():
                                 else:
                                        self.canvas.create_rectangle(x+(100),y+(100),
                                                     x,y,
-                                                    outline="#ffffff", fill="#ffffff")
-                self.beli = Button(master, text="beli") 
-                for x in range(50,750, 100):
-                        for y in range(50, 350, 100):
-                                if (x+y) % 2 == 0:
-                                        self.beli.grid(row=x, column=y)
-             
-                self.pozdrav = StringVar(master, value="DAMA")     
-                Label(master, textvariable=self.pozdrav).grid(row=900, column=50)
+                                                    outline="#ffffff", fill="#CD8527")
+                
                     
 ##          na koncu inita: izbira igralcev (veže na funkcijo izbira_igralca,
 ##          ta dela naprej)
@@ -54,6 +85,6 @@ class Gui():
  #GLAVNI PROGRAM
 root = Tk()
 root.title("Dama")
-aplikacija = Gui()
+aplikacija = Gui(root)
 root.mainloop()
-# more bit Gui(root), sam piĹˇe da nima argumentov
+
