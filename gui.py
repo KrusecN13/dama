@@ -41,7 +41,7 @@ class Gui():
                 nova_igra_menu.add_command(label = "Racunalnik - Racunalnik",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Minimax(globina)),
                                                                              Racunalnik(self, Minimax(globina))))
-                zapri_menu.add_command(label = "Izhod", command = lambda: self.prekini_vse())
+                zapri_menu.add_command(label = "Izhod", command = lambda: self.izhod())
 
                 self.kanvas = Canvas(master, width=800, height=800)
                 self.kanvas.grid()
@@ -109,26 +109,48 @@ class Gui():
                 
                 
             
-        
-        def naredi_potezo(self,a,p):
-        # a so stare koordinate, ki jih dobimo s klikom, p pa nove 
-            pass
-
-        def izbira_igralca(self):
-            pass
 
         def koncaj_igro(self,zmagovalec):
-            pass
+                if zmagovalec == igrC:
+                        self.napis.set("Zmagal je crni!")
+                elif zmagovalec == igrB:
+                        self.napis.set("Zmagal je beli!")
 
-        def prekini_vse(self):
+        def izhod(self):
 # zapreti okno, prekiniti igralce, 
-                logging.debug("prekinjam igralce")
-                self.igra.na_potezi.prekini()
+                
+                self.prekini_igralca()
                 master.destroy()
                 
         def prekini_igralca(self):
+                logging.debug("Prekinjam igralce")
+                self.igra.na_potezi.prekini()
+
+
+        def kanvas_klik1(self,event):
+        # dobiva koordinate stare pozicije
+                i = event.x // 100
+                j = event.y // 100
                 pass
 
+        def kanvas_klik2(self,event):
+        # dobiva nove koordinate in narediva potezo ce je med veljavnimi
+                i = event.x // 100
+                j = event.y // 100
+                if 0<= i <= 7 and 0<= j <= 7:
+                        if self.igra.na_potezi == IgrC:
+                                self.igrc.klik((i,j))
+                        elif self.igra.na_potezi == IgrB:
+                                self.igrb.klik((i,j))
+                        else:
+                                pass
+                else:
+                        logging.debug("klik izven deske {0}, polje {1}".format((event.x,event.y), (i,j)))
+
+
+        def naredi_potezo(self,a,p):
+        # a so stare koordinate, ki jih dobimo s klikom, p pa nove
+                pass
         
 
         
