@@ -3,7 +3,7 @@
 #Celotni razred skupaj z metodami bo vsebovan v (glavni) datoteki dama.py.
 
 
-from tkinter import *
+from Tkinter import *
 from dama import *
 
 #Definiramo razred, ki predstavlja na≈°o aplikacijo
@@ -49,8 +49,10 @@ class Gui():
                 self.napis = StringVar(master, value = "Dama")
                 Label(master, textvariable = self.napis, background = 'orange').grid(row=1, column=0)
 
-
-
+                self.igra = Igra()
+                self.igra.deska.bind("<Button-1>", self.klik1)
+                self.igra.deska.bind("<Button-2>", self.klik2)
+                
                 self.ime_igralcaC = StringVar(master, value = 'Crni igralec')
                 self.ime_igralcaB = StringVar(master, value = 'Beli igralec')
                 kanvas_ime_igralcaC = Entry(master, width = 10, textvariable = self.ime_igralcaC, background = 'orange')
@@ -127,30 +129,58 @@ class Gui():
                 self.igra.na_potezi.prekini()
 
 
-        def kanvas_klik1(self,event):
+        def kanvas_klik1(self,event1):
         # dobiva koordinate stare pozicije
-                i = event.x // 100
-                j = event.y // 100
-                pass
+                i = event1.x // 100
+                j = event1.y // 100
+                sez_vseh_iz_pozicije = []
+                (pojej,premakni) = self.igra.veljavne_poteze(na_potezi)
+                if pojej == [] and premakni == []:
+                        return [] 
+                elif pojej == []:
+                        for a,b in range(8):
+                                if ((i,j),(a,b)) in premakni:
+                                        sez_vseh_iz_pozicije.append((i,j),(a,b))
+                                        self.kanvas.create_rectangle(i*100 - 50,i*100 + 50,
+                                                    i*100 - 50,i*100 + 50,
+                                                    outline="#000000", fill="#1020FF")         
+                        
+                else:
+                        for a,b in range(8):
+                                if ((i,j),(a,b)) in pojej:
+                                        sez_vseh_iz_pozicije.append((i,j),(a,b))
+                                        self.kanvas.create_rectangle(i*100 - 50,i*100 + 50,
+                                                    i*100 - 50,i*100 + 50,
+                                                    outline="#000000", fill="#1020FF")
+##problem: retturn ne sme bit seznam, ampak klik!
+#naslednji cilj: zdruûitev obeh klikov, oba morta vrnt neki
 
-        def kanvas_klik2(self,event):
-        # dobiva nove koordinate in narediva potezo ce je med veljavnimi
-                i = event.x // 100
-                j = event.y // 100
-                if 0<= i <= 7 and 0<= j <= 7:
-                        if self.igra.na_potezi == IgrC:
-                                self.igrc.klik((i,j))
-                        elif self.igra.na_potezi == IgrB:
-                                self.igrb.klik((i,j))
+                                          
+                
+
+        def kanvas_klik2(self,event2):
+        # dobiva nove koordinate in narediva potezo ce je med veljavnim
+                klik1 = kanvas_klik1(event1)
+                if klik1 == []:
+                        pass
+                i = event2.x // 100
+                j = event2.y // 100
+                for ((a,b),(c,d)) in klik1:
+                        if (c,d) == (i,j):
+                                self.igra.na_potezi.klik((a,b),(c,d))
                         else:
                                 pass
-                else:
-                        logging.debug("klik izven deske {0}, polje {1}".format((event.x,event.y), (i,j)))
 
 
         def naredi_potezo(self,a,p):
         # a so stare koordinate, ki jih dobimo s klikom, p pa nove
-                pass
+                igralec = self.igra.na_potezi
+                self.igra.naredi_potezo(a,p)
+                
+                
+                        
+                        
+                        
         
 
         
