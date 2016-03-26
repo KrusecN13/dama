@@ -156,6 +156,7 @@ class Gui():
 
                                                 outline="#000000", fill="#1020FF")
                 print((i,j))
+                print(sez_vseh_iz_pozicije)
                 return sez_vseh_iz_pozicije
 
                        ##problem: retturn ne sme bit seznam, ampak klik!

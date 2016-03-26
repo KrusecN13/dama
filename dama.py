@@ -137,7 +137,7 @@ class Igra():
                             premakni.append(((i,j), (i-1, j+1*igr.smer)))
                         if 0 <= (i+1) <= 7 and 0 <= (j+1*igr.smer) <= 7 and self.deska[i+1][j+1*igr.smer] == None:
                             premakni.append(((i,j), (i+1, j+1*igr.smer)))
-            
+        
         return (pojej, premakni)
                     
                     
@@ -305,7 +305,7 @@ class Alfa_Beta():
 
 
 
-
+print(Igra().veljavne_poteze(igrC))
 
 
 
