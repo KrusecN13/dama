@@ -3,10 +3,10 @@
 #Celotni razred skupaj z metodami bo vsebovan v (glavni) datoteki dama.py.
 
 
-from Tkinter import *
+from tkinter import *
 from dama import *
 
-#Definiramo razred, ki predstavlja naÅ¡o aplikacijo
+#Definiramo razred, ki predstavlja naso aplikacijo
 class Gui():
 
         TAG_FIGURA = 'figura'
@@ -50,8 +50,8 @@ class Gui():
                 Label(master, textvariable = self.napis, background = 'orange').grid(row=1, column=0)
 
                 self.igra = Igra()
-                self.igra.deska.bind("<Button-1>", self.klik1)
-                self.igra.deska.bind("<Button-2>", self.klik2)
+                self.kanvas.bind("<Button-1>", self.kanvas_klik1)
+                self.kanvas.bind("<Button-2>", self.kanvas_klik2)
                 
                 self.ime_igralcaC = StringVar(master, value = 'Crni igralec')
                 self.ime_igralcaB = StringVar(master, value = 'Beli igralec')
@@ -134,48 +134,59 @@ class Gui():
                 i = event1.x // 100
                 j = event1.y // 100
                 sez_vseh_iz_pozicije = []
-                (pojej,premakni) = self.igra.veljavne_poteze(na_potezi)
+                (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
                 if pojej == [] and premakni == []:
-                        return [] 
+                        pass
                 elif pojej == []:
-                        for a,b in range(8):
-                                if ((i,j),(a,b)) in premakni:
-                                        sez_vseh_iz_pozicije.append((i,j),(a,b))
-                                        self.kanvas.create_rectangle(i*100 - 50,i*100 + 50,
+                        for a in range(8):
+                                for b in range(8):
+                                        if ((i,j),(a,b)) in premakni:
+                                                sez_vseh_iz_pozicije.append(((i,j),(a,b)))
+                                                self.kanvas.create_rectangle(i*100 - 50,i*100 + 50,
                                                     i*100 - 50,i*100 + 50,
                                                     outline="#000000", fill="#1020FF")         
                         
                 else:
-                        for a,b in range(8):
-                                if ((i,j),(a,b)) in pojej:
-                                        sez_vseh_iz_pozicije.append((i,j),(a,b))
-                                        self.kanvas.create_rectangle(i*100 - 50,i*100 + 50,
+                        for a in range(8):
+                                for b in range(8):
+                                        if ((i,j),(a,b)) in pojej:
+                                                sez_vseh_iz_pozicije.append(((i,j),(a,b)))
+                                                self.kanvas.create_rectangle(i*100 - 50,i*100 + 50,
                                                     i*100 - 50,i*100 + 50,
-                                                    outline="#000000", fill="#1020FF")
-##problem: retturn ne sme bit seznam, ampak klik!
-#naslednji cilj: združitev obeh klikov, oba morta vrnt neki
+
+                                                outline="#000000", fill="#1020FF")
+                print((i,j))
+                return sez_vseh_iz_pozicije
+
+                       ##problem: retturn ne sme bit seznam, ampak klik!
+#naslednji cilj: zdruï¿½itev obeh klikov, oba morta vrnt neki
 
                                           
                 
 
         def kanvas_klik2(self,event2):
         # dobiva nove koordinate in narediva potezo ce je med veljavnim
-                klik1 = kanvas_klik1(event1)
+                if self.enka == True and self.dvojka == False:        
+                        klik1 = kanvas_klik1(event1)
                 if klik1 == []:
                         pass
                 i = event2.x // 100
                 j = event2.y // 100
                 for ((a,b),(c,d)) in klik1:
-                        if (c,d) == (i,j):
+                         if (c,d) == (i,j):
                                 self.igra.na_potezi.klik((a,b),(c,d))
-                        else:
+                         else:
                                 pass
-
+                self.dvojka = True
 
         def naredi_potezo(self,a,p):
         # a so stare koordinate, ki jih dobimo s klikom, p pa nove
                 igralec = self.igra.na_potezi
                 self.igra.naredi_potezo(a,p)
+
+        ##
+                self.enka = False
+                self.dvojka = False
                 
                 
                         

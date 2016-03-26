@@ -1,6 +1,6 @@
 import threading
 import logging
-
+# -*- coding: cp1250 -*-
 ##
 ###### Razred Igra: <h4>
 ##Metode znotraj razreda Igra bodo:
@@ -9,6 +9,59 @@ import logging
 ##* na_potezi(self)
 ##* je_veljavna(self,i,j)
 ##* zmagovalec(self)
+
+class Clovek():
+    def __init__(self, gui, smer):
+        self.gui = gui
+        self.smer = smer
+        
+    def igraj(self):
+        pass
+
+    def prekini(self):
+        pass
+
+    def klik(self,p):
+        self.gui.naredi_potezo(a,p)
+
+class Racunalnik():
+    def __init__(self, gui, algoritem):
+        self.gui = gui
+        self.algoritem = algoritem
+        self.vlakno = None
+
+    def igraj(self):
+    # vzporedno vlakno ki najde najbolso potezo
+        self.vlakno = threading.Thread(
+            target = lambda: self.algoritem.najdi_potezo(self.gui.igra.kopija()))
+        
+
+        self.vlakno.start()
+
+        #vsake 100ms preveri, ali je bila najdena poteza
+        self.gui.deska.after(100, self.preveri)
+
+    def preveri(self):
+        if self.algoritem.poteza is not None:
+            self.gui.naredi_potezo(a,self.algoritem.poteza)
+            self.vlakno = None
+        else:
+            self.gui.deska.after(100, self.preveri)
+
+    def prekini(self):
+        if self.vlakno:
+            logging.debug("Prekini {0}".format(self.vlakno))
+            self.algoritem.prekini()
+            self.vlakno.join()
+            self.vlakno = None
+
+    def klik(self,p):
+        #ker igra racunalnik se ne odzove na klike
+        pass           
+        
+
+
+
 
 
 NI_KONEC = "ni konec"
@@ -21,7 +74,8 @@ class Figura():
     def __repr__(self):
         return 'Figura(%s, %s)' % (self.igralec, self.dama)
 
-        
+igrC = Clovek(None,1)
+igrB = Clovek(None,-1)
         
 def nasprotnik(igralec):
     if igralec == igrC:
@@ -37,8 +91,7 @@ class Igra():
     def __init__(self):
 
         # None spremeniti v gui ko bo definirano
-        igrC = Clovek(None,1)
-        igrB = Clovek(None,-1)
+
         self.deska = [[Figura(igrC), False, Figura(igrC), False, Figura(igrC), False, Figura(igrC), False],
                       [False, Figura(igrC), False, Figura(igrC), False, Figura(igrC), False, Figura(igrC)],
                       [Figura(igrC), False, Figura(igrC), False, Figura(igrC), False, Figura(igrC), False],
@@ -73,16 +126,17 @@ class Igra():
         pojej = []
         for i in range(8):
             for j in range(8):
-                if self.deska[i][j].igralec == igr :
-                    if 0 <= (i-2) <= 7 and 0 <= (j+2*igr.smer) <= 7 and self.deska[i-2][j+2*igr.smer] == None and self.deska[i-1][j+1*igr.smer] == Figura(nasprotnik(igr)):
-                        pojej.append((i,j), (i-2, j+2*igr.smer))
-                    if 0 <= (i+2) <= 7 and 0 <= (j+2*igr.smer) <= 7 and self.deska[i+2][j+2*igr.smer] == None and self.deska[i+1][j+1*igr.smer] == Figura(nasprotnik(igr)):
-                        pojej.append((i,j), (i+2, j+2*igr.smer))
+                if self.deska[i][j] != False and self.deska[i][j] != None:
+                    if self.deska[i][j].igralec == igr :
+                        if 0 <= (i-2) <= 7 and 0 <= (j+2*igr.smer) <= 7 and self.deska[i-2][j+2*igr.smer] == None and self.deska[i-1][j+1*igr.smer] == Figura(nasprotnik(igr)):
+                            pojej.append(((i,j), (i-2, j+2*igr.smer)))
+                        if 0 <= (i+2) <= 7 and 0 <= (j+2*igr.smer) <= 7 and self.deska[i+2][j+2*igr.smer] == None and self.deska[i+1][j+1*igr.smer] == Figura(nasprotnik(igr)):
+                            pojej.append(((i,j), (i+2, j+2*igr.smer)))
                     
-                    if 0 <= (i-1) <= 7 and 0 <= (j+1*igr.smer) <= 7 and self.deska[i-1][j+1*igr.smer] == None:
-                        premakni.append((i,j), (i-1, j+1*igr.smer))
-                    if 0 <= (i+1) <= 7 and 0 <= (j+1*igr.smer) <= 7 and self.deska[i+1][j+1*igr.smer] == None:
-                        premakni.append((i,j), (i+1, j+1*igr.smer))
+                        if 0 <= (i-1) <= 7 and 0 <= (j+1*igr.smer) <= 7 and self.deska[i-1][j+1*igr.smer] == None:
+                            premakni.append(((i,j), (i-1, j+1*igr.smer)))
+                        if 0 <= (i+1) <= 7 and 0 <= (j+1*igr.smer) <= 7 and self.deska[i+1][j+1*igr.smer] == None:
+                            premakni.append(((i,j), (i+1, j+1*igr.smer)))
             
         return (pojej, premakni)
                     
@@ -160,60 +214,6 @@ class Igra():
 ##* class clovek, ki bo imel metodi:
 ##    * __init__(self, gui), ki se bo povezala z uporabniskim vmesnikom, 
 ##    * premakni(self)
-
-class Clovek():
-    def __init__(self, gui, smer):
-        self.gui = gui
-        self.smer = smer
-        
-    def igraj(self):
-        pass
-
-    def prekini(self):
-        pass
-
-    def klik(self,p):
-        self.gui.naredi_potezo(a,p)
-
-class Racunalnik():
-    def __init__(self, gui, algoritem):
-        self.gui = gui
-        self.algoritem = algoritem
-        self.vlakno = None
-
-    def igraj(self):
-    # vzporedno vlakno ki najde najbolso potezo
-        self.vlakno = threading.Thread(
-            target = lambda: self.algoritem.najdi_potezo(self.gui.igra.kopija()))
-        
-
-        self.vlakno.start()
-
-        #vsake 100ms preveri, ali je bila najdena poteza
-        self.gui.deska.after(100, self.preveri)
-
-    def preveri(self):
-        if self.algoritem.poteza is not None:
-            self.gui.naredi_potezo(a,self.algoritem.poteza)
-            self.vlakno = None
-        else:
-            self.gui.deska.after(100, self.preveri)
-
-    def prekini(self):
-        if self.vlakno:
-            logging.debug("Prekini {0}".format(self.vlakno))
-            self.algoritem.prekini()
-            self.vlakno.join()
-            self.vlakno = None
-
-    def klik(self,p):
-        #ker igra racunalnik se ne odzove na klike
-        pass           
-        
-
-
-        
-
 class Minimax():
     def __init__(self, globina):
         self.globina = globina
