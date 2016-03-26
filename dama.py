@@ -126,16 +126,16 @@ class Igra():
         pojej = []
         for i in range(8):
             for j in range(8):
-                if self.deska[i][j] != False and self.deska[i][j] != None:
-                    if self.deska[i][j].igralec == igr :
-                        if 0 <= (i-2) <= 7 and 0 <= (j+2*igr.smer) <= 7 and self.deska[i-2][j+2*igr.smer] == None and self.deska[i-1][j+1*igr.smer] == Figura(nasprotnik(igr)):
+                if self.deska[j][i] != False and self.deska[j][i] != None:
+                    if self.deska[j][i].igralec == igr :
+                        if 0 <= (i-2) <= 7 and 0 <= (j+2*igr.smer) <= 7 and self.deska[j+2*igr.smer][i-2] == None and self.deska[j+1*igr.smer][i-1] == Figura(nasprotnik(igr)):
                             pojej.append(((i,j), (i-2, j+2*igr.smer)))
-                        if 0 <= (i+2) <= 7 and 0 <= (j+2*igr.smer) <= 7 and self.deska[i+2][j+2*igr.smer] == None and self.deska[i+1][j+1*igr.smer] == Figura(nasprotnik(igr)):
+                        if 0 <= (i+2) <= 7 and 0 <= (j+2*igr.smer) <= 7 and self.deska[j+2*igr.smer][i+2] == None and self.deska[j+1*igr.smer][i+1] == Figura(nasprotnik(igr)):
                             pojej.append(((i,j), (i+2, j+2*igr.smer)))
                     
-                        if 0 <= (i-1) <= 7 and 0 <= (j+1*igr.smer) <= 7 and self.deska[i-1][j+1*igr.smer] == None:
+                        if 0 <= (i-1) <= 7 and 0 <= (j+1*igr.smer) <= 7 and self.deska[j+1*igr.smer][i-1] == None:
                             premakni.append(((i,j), (i-1, j+1*igr.smer)))
-                        if 0 <= (i+1) <= 7 and 0 <= (j+1*igr.smer) <= 7 and self.deska[i+1][j+1*igr.smer] == None:
+                        if 0 <= (i+1) <= 7 and 0 <= (j+1*igr.smer) <= 7 and self.deska[j+1*igr.smer][i+1] == None:
                             premakni.append(((i,j), (i+1, j+1*igr.smer)))
         
         return (pojej, premakni)
