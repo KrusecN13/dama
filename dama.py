@@ -92,7 +92,7 @@ class Igra():
     def stanje(self):
         
         # ugotovi, ali ce imamo zmagovalca in ga vrne, oz. sporoci da ce ni konec igre
-        (pojej, premakni) = veljavne_poteze(nasprotnik(igr))
+        (pojej, premakni) = veljavne_poteze(nasprotnik(self.na_potezi))
         if pojej == [] and premakni ==[]:
             return self.na_potezi
         else:
@@ -105,8 +105,8 @@ class Igra():
     # ce je poteza veljavna jo izvede
     # p so stare koordinate(kjer figura stoji), r so nove(kamor se hoce premakniti)
         (p1,p2) = p
-        (r1, r2) = r
-        (pojej, premakni) = veljavne_poteze(igr)
+        (r1,r2) = r
+        (pojej, premakni) = veljavne_poteze(self.na_potezi)
         for i in pojej:
             if (p,r) == i:
                 self.shrani_potezo()
