@@ -293,7 +293,7 @@ class Minimax():
                 assert (najboljsa_poteza is not None), "minimax: izracunana poteza je None"
                 return (najboljsa_poteza, vrednost_najboljse)
         else:
-            assert False, "minimax: nedefinirano stanje igre"
+            assert False, "minimax: nedefinirano stanje igre "
             
                         
             

@@ -51,7 +51,6 @@ class Gui():
 
                 self.igra = Igra()
                 self.kanvas.bind("<Button-1>", self.kanvas_klik1)
-                self.kanvas.bind("<Button-2>", self.kanvas_klik2)
                 
                 self.ime_igralcaC = StringVar(master, value = 'Crni igralec')
                 self.ime_igralcaB = StringVar(master, value = 'Beli igralec')
@@ -157,6 +156,9 @@ class Gui():
                                                 outline="#000000", fill="#1020FF")
                 print((i,j))
                 print(sez_vseh_iz_pozicije)
+                if sez_vseh_iz_pozicije != []:
+                        self.kanvas.unbind("<Button-1>")
+                        self.kanvas.bind("<Button-1>", self.kanvas_klik2)
                 return sez_vseh_iz_pozicije
 
                        ##problem: retturn ne sme bit seznam, ampak klik!
@@ -167,27 +169,26 @@ class Gui():
 
         def kanvas_klik2(self,event2):
         # dobiva nove koordinate in narediva potezo ce je med veljavnim
-                if self.enka == True and self.dvojka == False:        
-                        klik1 = kanvas_klik1(event1)
+                klik1 = [((2,2),(3,3))] #neka cifra za poskus
                 if klik1 == []:
                         pass
                 i = event2.x // 100
                 j = event2.y // 100
-                for ((a,b),(c,d)) in klik1:
+                for (a,b),(c,d) in klik1:
                          if (c,d) == (i,j):
-                                self.igra.na_potezi.klik((a,b),(c,d))
+                                self.igra.na_potezi.klik(((a,b),(c,d)))
+                                print("pridem do sem")
+                                self.kanvas.unbind("<Button-1>")
+                                self.kanvas.bind("<Button-1>", self.kanvas_klik1)
                          else:
                                 pass
-                self.dvojka = True
+                print("NEKI")
 
         def naredi_potezo(self,a,p):
         # a so stare koordinate, ki jih dobimo s klikom, p pa nove
                 igralec = self.igra.na_potezi
                 self.igra.naredi_potezo(a,p)
 
-        ##
-                self.enka = False
-                self.dvojka = False
                 
                 
                         
