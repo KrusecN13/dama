@@ -1,5 +1,6 @@
 import threading
 import logging
+
 # -*- coding: cp1250 -*-
 ##
 ###### Razred Igra: <h4>
@@ -27,7 +28,7 @@ class Clovek():
         pass
 
     def klik(self,p):
-        
+        print('to je ze v kliku', p)
         self.gui.naredi_potezo(p[0], p[1])
         print ("Clovek je naredil potezo {0}".format(p))
 
@@ -62,7 +63,7 @@ class Racunalnik():
             self.vlakno.join()
             self.vlakno = None
 
-    def klik(self,p):
+    def klik(self,a, p):
         #ker igra racunalnik se ne odzove na klike
         pass           
         

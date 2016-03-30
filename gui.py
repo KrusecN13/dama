@@ -157,7 +157,7 @@ class Gui():
                         # To je prvi klik
                         i = event.x // 100
                         j = event.y // 100
-                        print('na potezi   =',self.igra.na_potezi)
+                        #print('na potezi   =',self.igra.na_potezi)
                         (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
                         
                         pojej_iz_polja = []
@@ -180,7 +180,7 @@ class Gui():
                         #         # Ni možne poteze, kaj sploh delamo tu?
 
                         if pojej == [] and premakni == []:
-                                print('oba seznama sta prazna')
+                                #print('oba seznama sta prazna')
                                 self.koncaj_igro(nasprotnik(self.igra.na_potezi)) 
                                 return # XXX tricky, morda je bolje narediti if-else tako, da se takoj vidi, da se koda spodaj ne izvaja
                         
@@ -193,7 +193,7 @@ class Gui():
                                          for ((x,y), (a,b)) in pojej:
                                                 if x == i and y == j:
                                                         pojej_iz_polja.append(((i,j),(a,b)))
-                        print(pojej_iz_polja)
+                        #print(pojej_iz_polja)
                
                         if pojej != [] and pojej_iz_polja == []:
                                 self.napis.set("Izberi figuro, ki mora pojesti!")
@@ -218,20 +218,20 @@ class Gui():
                                 return
                                 
                                 
-                        print((i,j))
-                        print(sez_vseh_iz_pozicije)
+                        #print((i,j))
+                        #print(sez_vseh_iz_pozicije)
                         if len(sez_vseh_iz_pozicije) > 0:
                                 # Gremo v drugo fazo klika
                                 # XXX kaj pa, če bi označili še tistega, na katerega je kliknil?
-                                print ("Gremo v fazo 2")
+                                #print ("Gremo v fazo 2")
                                 self.prenesene_poteze = sez_vseh_iz_pozicije
                                 self.opravljen_klik1 = True
 
                 else:
-                        print ("Pa smo v fazi 2")
+                        #print ("Pa smo v fazi 2")
                         # XXX takole pobrišemo: self.kanvas.delete("oznaka")
                         sez_vseh_iz_pozicije = self.prenesene_poteze
-                        print(sez_vseh_iz_pozicije)
+                        #print(sez_vseh_iz_pozicije)
                         assert (len(sez_vseh_iz_pozicije) > 0), "druga faza klika"
                         # To je drugi klik
                         i = event.x // 100
@@ -266,10 +266,10 @@ class Gui():
                 r = self.igra.naredi_potezo(a,p)
                 (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
                 if (a,p) in pojej:
-                        kanvas.coords(id_1,p)
+                        self.kanvas.coords(id_1,p)
                         self.zbrisi_figuro(((m+k)//2),((l+n)//2))
                 elif (a,p) in premakni:
-                        kanvas.coords(id_1,p)
+                        self.kanvas.coords(id_1,p)
                 
                                                     
                         
