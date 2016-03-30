@@ -10,6 +10,12 @@ import logging
 ##* je_veljavna(self,i,j)
 ##* zmagovalec(self)
 
+CRNI = 'C'
+BELI = 'B'
+        
+NI_KONEC = "ni konec"
+GLOBINA = 3
+
 class Clovek():
     def __init__(self, gui, smer):
         self.gui = gui
@@ -22,7 +28,8 @@ class Clovek():
         pass
 
     def klik(self,p):
-        self.gui.naredi_potezo(a,p)
+        # self.gui.naredi_potezo(a,p)
+        print ("Clovek je naredil potezo {0}".format(p))
 
 class Racunalnik():
     def __init__(self, gui, algoritem):
@@ -61,12 +68,6 @@ class Racunalnik():
         
 
 
-
-
-
-NI_KONEC = "ni konec"
-GLOBINA = 3
-
 class Figura():
     def __init__(self, igralec, dama = False):
         self.igralec = igralec
@@ -74,14 +75,11 @@ class Figura():
     def __repr__(self):
         return 'Figura(%s, %s)' % (self.igralec, self.dama)
 
-igrC = Clovek(None,1)
-igrB = Clovek(None,-1)
-        
 def nasprotnik(igralec):
-    if igralec == igrC:
-        return igrB
-    elif igralec == igrB:
-        return igrC
+    if igralec == CRNI:
+        return BELI
+    elif igralec == BELI:
+        return CRNI
     else:
         assert False
     
@@ -92,18 +90,18 @@ class Igra():
 
         # None spremeniti v gui ko bo definirano
 
-        self.deska = [[Figura(igrC), False, Figura(igrC), False, Figura(igrC), False, Figura(igrC), False],
-                      [False, Figura(igrC), False, Figura(igrC), False, Figura(igrC), False, Figura(igrC)],
-                      [Figura(igrC), False, Figura(igrC), False, Figura(igrC), False, Figura(igrC), False],
+        self.deska = [[Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False],
+                      [False, Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI)],
+                      [Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False],
                       [False,None,False,None,False,None,False,None],
                       [None,False,None,False,None,False,None,False],
-                      [False, Figura(igrB), False, Figura(igrB),False, Figura(igrB), False, Figura(igrB)],
-                      [Figura(igrB), False, Figura(igrB), False, Figura(igrB), False, Figura(igrB), False],
-                      [False, Figura(igrB), False, Figura(igrB),False, Figura(igrB), False, Figura(igrB)]]
+                      [False, Figura(BELI), False, Figura(BELI),False, Figura(BELI), False, Figura(BELI)],
+                      [Figura(BELI), False, Figura(BELI), False, Figura(BELI), False, Figura(BELI), False],
+                      [False, Figura(BELI), False, Figura(BELI),False, Figura(BELI), False, Figura(BELI)]]
         
         
-        self.na_potezi = igrC
-        self.zgodovina = [(self.deska, igrC)]
+        self.na_potezi = CRNI
+        self.zgodovina = [(self.deska, CRNI)]
 
     
     def shrani_potezo(self):
@@ -122,21 +120,22 @@ class Igra():
         (self.deska,self.na_potezi) = self.zgodovina.pop()
 
     def veljavne_poteze(self, igr):
+        smer = (1 if igr == CRNI else -1)
         premakni = []
         pojej = []
         for i in range(8):
             for j in range(8):
                 if self.deska[j][i] != False and self.deska[j][i] != None:
                     if self.deska[j][i].igralec == igr :
-                        if 0 <= (i-2) <= 7 and 0 <= (j+2*igr.smer) <= 7 and self.deska[j+2*igr.smer][i-2] == None and self.deska[j+1*igr.smer][i-1] == Figura(nasprotnik(igr)):
-                            pojej.append(((i,j), (i-2, j+2*igr.smer)))
-                        if 0 <= (i+2) <= 7 and 0 <= (j+2*igr.smer) <= 7 and self.deska[j+2*igr.smer][i+2] == None and self.deska[j+1*igr.smer][i+1] == Figura(nasprotnik(igr)):
-                            pojej.append(((i,j), (i+2, j+2*igr.smer)))
+                        if 0 <= (i-2) <= 7 and 0 <= (j+2*smer) <= 7 and self.deska[j+2*smer][i-2] == None and self.deska[j+1*smer][i-1] == Figura(nasprotnik(igr)):
+                            pojej.append(((i,j), (i-2, j+2*smer)))
+                        if 0 <= (i+2) <= 7 and 0 <= (j+2*smer) <= 7 and self.deska[j+2*smer][i+2] == None and self.deska[j+1*smer][i+1] == Figura(nasprotnik(igr)):
+                            pojej.append(((i,j), (i+2, j+2*smer)))
                     
-                        if 0 <= (i-1) <= 7 and 0 <= (j+1*igr.smer) <= 7 and self.deska[j+1*igr.smer][i-1] == None:
-                            premakni.append(((i,j), (i-1, j+1*igr.smer)))
-                        if 0 <= (i+1) <= 7 and 0 <= (j+1*igr.smer) <= 7 and self.deska[j+1*igr.smer][i+1] == None:
-                            premakni.append(((i,j), (i+1, j+1*igr.smer)))
+                        if 0 <= (i-1) <= 7 and 0 <= (j+1*smer) <= 7 and self.deska[j+1*smer][i-1] == None:
+                            premakni.append(((i,j), (i-1, j+1*smer)))
+                        if 0 <= (i+1) <= 7 and 0 <= (j+1*smer) <= 7 and self.deska[j+1*smer][i+1] == None:
+                            premakni.append(((i,j), (i+1, j+1*smer)))
         
         return (pojej, premakni)
                     
@@ -254,7 +253,7 @@ class Minimax():
             logging.debug ("Minimax prekinja, globina = {0}".format(globina))
             return (None,0)
         (zmagovalec) = self.igra.stanje()
-        if zmagovalec in (igrC,IgrB):
+        if zmagovalec in (CRNI,IgrB):
             if zmagovalec == self.jaz:
                 return (None, Minimax.ZMAGA)
             elif zmagovalec == nasprotnik(self.jaz):
@@ -305,7 +304,7 @@ class Alfa_Beta():
 
 
 
-print(Igra().veljavne_poteze(igrC))
+print(Igra().veljavne_poteze(CRNI))
 
 
 
