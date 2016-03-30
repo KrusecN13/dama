@@ -10,6 +10,7 @@ from dama import *
 class Gui():
 
         TAG_FIGURA = 'figura'
+        TAG_KROG = 'krog'
         
         def __init__(self, master=None):
                 self.prenesene_poteze = [] 
@@ -36,21 +37,19 @@ class Gui():
                 #s klikom na orodno vrstico izberemo moznosti
                 
 
+                #s klikom na orodno vrstico izberemo moznosti
                 nova_igra_menu.add_command(label = "Clovek - Clovek",
-                                           command = lambda: self.zacni_igro(Clovek(self, self.ime_igralcaC),
-                                                                             Clovek(self, self.ime_igralcaB)))
+                                           command = lambda: self.zacni_igro(Clovek(self),
+                                                                             Clovek(self)))
                 nova_igra_menu.add_command(label = "Clovek - Racunalnik",
-                                           command = lambda: self.zacni_igro(Clovek(self, self.ime_igralcaC),
+                                           command = lambda: self.zacni_igro(Clovek(self),
                                                                              Racunalnik(self, Minimax(globina))))
                 nova_igra_menu.add_command(label = "Racunalnik - Clovek",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Minimax(globina)),
-                                                                             Clovek(self, self.ime_igralcaB)))
+                                                                             Clovek(self)))
                 nova_igra_menu.add_command(label = "Racunalnik - Racunalnik",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Minimax(globina)),
                                                                              Racunalnik(self, Minimax(globina))))
-
-
-
 
 
                 
@@ -83,23 +82,29 @@ class Gui():
                                        self.kanvas.create_rectangle(x+(100),y+(100),
                                                     x,y,
                                                     outline="#ffffff", fill="#CD8527")
+                                       
 
-                self.zacni_igro(Clovek(self, self.ime_igralcaB), Clovek(self, self.ime_igralcaC))
+                self.zacni_igro(Clovek(self), Clovek(self))
 
         def postavi_figure(self):
-                self.slovar_figur = {} 
+                #self.slovar_figur = {} # XXX To bi moralo biti v self
                 for i in range(8):
                         for j in range(3):
                                 if (i+j)%2 == 0:
-                                        a = self.kanvas.create_oval(i*100 + 15, j*100 + 15, i*100 + 85, j*100 + 85, fill='#7D26D9', outline='#000000') 
-                                        self.slovar_figur[Figura('CRNI')]=a
+                                        a = self.kanvas.create_oval(i*100 + 15, j*100 + 15, i*100 + 85, j*100 + 85, fill='#7D26D9', outline='#000000', tag = Gui.TAG_FIGURA) 
+                                        #self.slovar_figur[Figura('CRNI',indeks = a)]=a
+                                        fig = Figura(CRNI, indeks = a)
+                                        self.igra.deska[j][i] = fig
+                                        
                 for i in range(8):
                         for j in range(5,8):
                                 if (i+j)%2 == 0:
-                                        a = self.kanvas.create_oval(i*100 + 15, j*100 + 15, i*100 + 85, j*100 + 85, fill='#9EB5BA', outline='#000000') 
-                                        self.slovar_figur[Figura('BELI')]=a
+                                        a = self.kanvas.create_oval(i*100 + 15, j*100 + 15, i*100 + 85, j*100 + 85, fill='#9EB5BA', outline='#000000', tag = Gui.TAG_FIGURA) 
+                                        fig = Figura(BELI, indeks = a)
+                                        #self.slovar_figur[fig]=a
+                                        self.igra.deska[j][i] = fig
                                         
-                print(self.slovar_figur)
+                print(self.igra.deska)
 
 
                 
@@ -110,7 +115,7 @@ class Gui():
                 self.kanvas.delete(Gui.TAG_FIGURA)
                 self.postavi_figure()                
 
-                self.igra = Igra()
+        
                 
                 self.igrc = igrc
                 self.igrb = igrb
@@ -121,9 +126,9 @@ class Gui():
             
 
         def koncaj_igro(self,zmagovalec):
-                if zmagovalec == igrC:
+                if zmagovalec == CRNI:
                         self.napis.set("Zmagal je crni!")
-                elif zmagovalec == igrB:
+                elif zmagovalec == BELI:
                         self.napis.set("Zmagal je beli!")
 
         def izhod(self):
@@ -140,21 +145,21 @@ class Gui():
                 
         def zbrisi_figuro(self,polje):
                 (a,b) = polje
-                self.kanvas.delete(slovar_figur[self.deska[a][b]])
-                del self.slovar_figur[self.deska[a][b]]
-                self.deska[a][b] = None
+                self.kanvas.delete(self.igra.deska[a][b].indeks)
+                self.igra.deska[a][b] = None
                 
         
 
         
         def kanvas_klika(self, event):
                 if not self.opravljen_klik1:
-        
+                        print('zacetek faze 1')
                         # To je prvi klik
                         i = event.x // 100
                         j = event.y // 100
-                        sez_vseh_iz_pozicije = []
+                        print('na potezi   =',self.igra.na_potezi)
                         (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
+                        
                         pojej_iz_polja = []
                         premakni_iz_polja = []
 
@@ -175,6 +180,7 @@ class Gui():
                         #         # Ni možne poteze, kaj sploh delamo tu?
 
                         if pojej == [] and premakni == []:
+                                print('oba seznama sta prazna')
                                 self.koncaj_igro(nasprotnik(self.igra.na_potezi)) 
                                 return # XXX tricky, morda je bolje narediti if-else tako, da se takoj vidi, da se koda spodaj ne izvaja
                         
@@ -196,15 +202,17 @@ class Gui():
                                 #Možna je poteza
                                 if len(pojej_iz_polja) > 0:
                                         
-                                        seznam_vseh_iz_pozicije = pojej_iz_polja
-                                        for ((i,j),(a,b)) in seznam_vseh_iz_pozicije:
-                                                 self.kanvas.create_rectangle(a*100 - 50, b*100 + 50, a*100 - 50, b*100 + 50,outline="#000000", fill="#1020FF", tag="oznaka")
-
+                                        sez_vseh_iz_pozicije = pojej_iz_polja
+                                        for ((i,j),(a,b)) in sez_vseh_iz_pozicije:
+                                                 self.kanvas.create_oval(a*100 + 30, b*100 + 30,
+                                                                             a*100 + 70, b*100 + 70,
+                                                                             outline="#000000", fill="#1020FF", tag = Gui.TAG_KROG)
                                 elif len(premakni_iz_polja) > 0:
-                                        seznam_vseh_iz_pozicije = premakni_iz_polja
-                                        for ((i,j),(a,b)) in seznam_vseh_iz_pozicije:
-                                                self.kanvas.create_rectangle(a*100 - 50, b*100 + 50, a*100 - 50, b*100 + 50,outline="#000000", fill="#1020FF", tag="oznaka")
-
+                                        sez_vseh_iz_pozicije = premakni_iz_polja
+                                        for ((i,j),(a,b)) in sez_vseh_iz_pozicije:
+                                                self.kanvas.create_oval(a*100 + 30, b*100 + 30,
+                                                                             a*100 + 70, b*100 + 70,
+                                                                             outline="#000000", fill="#1020FF", tag = Gui.TAG_KROG)
                         else:
                                 self.napis.set("Izberi figuro, ki lahko naredi potezo!")
                                 return
@@ -242,6 +250,7 @@ class Gui():
                         # Gremo nazaj v fazo 1
                         self.prenesene_poteze = []
                         self.opravljen_klik1 = False
+                        self.kanvas.delete(Gui.TAG_KROG)
 
         def naredi_potezo(self,a,p):
                 # a so stare koordinate, ki jih dobimo s klikom, p pa nove
@@ -249,24 +258,20 @@ class Gui():
                 # kanvas.coords
                 (k,l) = a
                 (m,n) = p
-                id_1 = self.slovar_figur[self.deska[k][l]]
+                print('premik',a,p)
+                print(self.igra.deska)
+                id_1 = self.igra.deska[l][k].indeks
                 print(id_1)
                 igralec = self.igra.na_potezi
                 r = self.igra.naredi_potezo(a,p)
                 (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
                 if (a,p) in pojej:
                         kanvas.coords(id_1,p)
-                        self.zbrisi_figuro(((m+k)//2),((l+n)/2))
-                if (a,p) in premakni:
+                        self.zbrisi_figuro(((m+k)//2),((l+n)//2))
+                elif (a,p) in premakni:
                         kanvas.coords(id_1,p)
-                pass
-                        
-                        
-##                if r == None:
-##                        pass
-##                else:
-##                        if r == NI_KONEC:
-##                                
+                
+                                                    
                         
                         
                 

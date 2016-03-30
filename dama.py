@@ -27,7 +27,8 @@ class Clovek():
         pass
 
     def klik(self,p):
-        # self.gui.naredi_potezo(a,p)
+        
+        self.gui.naredi_potezo(p[0], p[1])
         print ("Clovek je naredil potezo {0}".format(p))
 
 class Racunalnik():
@@ -68,12 +69,15 @@ class Racunalnik():
 
 
 class Figura():
-    def __init__(self, igralec, dama = False):
+    def __init__(self, igralec, dama = False, indeks = False):
         self.igralec = igralec
         self.dama = dama
+        self.indeks = indeks
+        
     def __repr__(self):
-        return 'Figura(%s, %s)' % (self.igralec, self.dama)
+        return 'Figura(%s, %s, %s)' % (self.igralec, self.dama, self.indeks)
 
+    
 def nasprotnik(igralec):
     if igralec == CRNI:
         return BELI
@@ -143,7 +147,7 @@ class Igra():
     def stanje(self):
         
         # ugotovi, ali ce imamo zmagovalca in ga vrne, oz. sporoci da ce ni konec igre
-        (pojej, premakni) = veljavne_poteze(nasprotnik(self.na_potezi))
+        (pojej, premakni) = self.veljavne_poteze(nasprotnik(self.na_potezi))
         if pojej == [] and premakni ==[]:
             return self.na_potezi
         else:
@@ -157,7 +161,7 @@ class Igra():
     # p so stare koordinate(kjer figura stoji), r so nove(kamor se hoce premakniti)
         (p1,p2) = p
         (r1,r2) = r
-        (pojej, premakni) = veljavne_poteze(self.na_potezi)
+        (pojej, premakni) = self.veljavne_poteze(self.na_potezi)
         for i in pojej:
             if (p,r) == i:
                 self.shrani_potezo()
@@ -176,7 +180,7 @@ class Igra():
                     self.na_potezi = None
                     return zmagovalec
         for j in premakni:
-            if (p,r) == i:
+            if (p,r) == j:
                 self.shrani_potezo()
                 self.deska[r1][r2] = self.deska[p1][p2]
                 self.deska[p1][p2] = None
