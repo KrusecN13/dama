@@ -12,8 +12,8 @@ class Gui():
         TAG_FIGURA = 'figura'
         
         def __init__(self, master=None):
-                self.podatek = [] # XXX Butasto ime za atribut
-                self.prvi_klik = False # XXX Ali to pomeni, da se še ni zgodil, da se je že zgodil, ali da se dogaja "prvi klik"?
+                self.prenesene_poteze = [] 
+                self.opravljen_klik1 = False 
                 
                 self.igra = None
                 
@@ -34,6 +34,8 @@ class Gui():
                 menu.add_cascade(label = "Izhod", menu = zapri_menu)
 
                 #s klikom na orodno vrstico izberemo moznosti
+                
+
                 nova_igra_menu.add_command(label = "Clovek - Clovek",
                                            command = lambda: self.zacni_igro(Clovek(self, self.ime_igralcaC),
                                                                              Clovek(self, self.ime_igralcaB)))
@@ -46,6 +48,12 @@ class Gui():
                 nova_igra_menu.add_command(label = "Racunalnik - Racunalnik",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Minimax(globina)),
                                                                              Racunalnik(self, Minimax(globina))))
+
+
+
+
+
+                
                 zapri_menu.add_command(label = "Izhod", command = lambda: self.izhod())
 
                 self.kanvas = Canvas(master, width=800, height=800)
@@ -54,7 +62,7 @@ class Gui():
                 self.napis = StringVar(master, value = "Dama")
                 Label(master, textvariable = self.napis, background = 'orange').grid(row=1, column=0)
 
-                self.kanvas.bind("<Button-1>", self.kanvas_klik1)
+                self.kanvas.bind("<Button-1>", self.kanvas_klika)
                 
                 self.ime_igralcaC = StringVar(master, value = 'Crni igralec')
                 self.ime_igralcaB = StringVar(master, value = 'Beli igralec')
@@ -79,19 +87,19 @@ class Gui():
                 self.zacni_igro(Clovek(self, self.ime_igralcaB), Clovek(self, self.ime_igralcaC))
 
         def postavi_figure(self):
-                slovar_figur = {} # XXX To bi moralo biti v self
+                self.slovar_figur = {} 
                 for i in range(8):
                         for j in range(3):
                                 if (i+j)%2 == 0:
                                         a = self.kanvas.create_oval(i*100 + 15, j*100 + 15, i*100 + 85, j*100 + 85, fill='#7D26D9', outline='#000000') 
-                                        slovar_figur[Figura('igrC')]=a
+                                        self.slovar_figur[Figura('CRNI')]=a
                 for i in range(8):
                         for j in range(5,8):
                                 if (i+j)%2 == 0:
                                         a = self.kanvas.create_oval(i*100 + 15, j*100 + 15, i*100 + 85, j*100 + 85, fill='#9EB5BA', outline='#000000') 
-                                        slovar_figur[Figura('igrB')]=a
+                                        self.slovar_figur[Figura('BELI')]=a
                                         
-                print(slovar_figur)
+                print(self.slovar_figur)
 
 
                 
@@ -119,7 +127,7 @@ class Gui():
                         self.napis.set("Zmagal je beli!")
 
         def izhod(self):
-                # zapreti okno, prekiniti igralce,                 
+                # zapri okno, prekini igralce,                 
                 self.prekini_igralca()
                 master.destroy()
                 
@@ -133,20 +141,22 @@ class Gui():
         def zbrisi_figuro(self,polje):
                 (a,b) = polje
                 self.kanvas.delete(slovar_figur[self.deska[a][b]])
-                del slovar_figur[self.deska[a][b]]
+                del self.slovar_figur[self.deska[a][b]]
                 self.deska[a][b] = None
                 
         
 
-        # XXX To ni več klik1, ker imamo samo še en klik.
-        def kanvas_klik1(self, event):
-                if self.prvi_klik == False: # XXX namesto "p == False" lahko naredimo "not p"
+        
+        def kanvas_klika(self, event):
+                if not self.opravljen_klik1:
         
                         # To je prvi klik
                         i = event.x // 100
                         j = event.y // 100
                         sez_vseh_iz_pozicije = []
                         (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
+                        pojej_iz_polja = []
+                        premakni_iz_polja = []
 
                         # # Alternativna možna logika
                         # if len(pojej) > 0 or len(premakni) > 0:
@@ -165,37 +175,54 @@ class Gui():
                         #         # Ni možne poteze, kaj sploh delamo tu?
 
                         if pojej == [] and premakni == []:
-                                self.napis.set("Izberi drugo figuro!") # XXX User ne more izbrati druge figure, ker nima nobene poteze!
+                                self.koncaj_igro(nasprotnik(self.igra.na_potezi)) 
                                 return # XXX tricky, morda je bolje narediti if-else tako, da se takoj vidi, da se koda spodaj ne izvaja
-                        elif pojej == []:
-                                for ((x,y), (a,b)) in premakni:
-                                        if x == i and y == j:
-                                                sez_vseh_iz_pozicije.append(((i,j),(a,b)))
-                                                self.kanvas.create_rectangle(a*100 - 50, b*100 + 50,
-                                                                             a*100 - 50, b*100 + 50,
-                                                                             outline="#000000", fill="#1020FF") # XXX , tag="oznaka")
+                        
                         else:
-                                # XXX tukaj se tudi da popraviti zanko, da ne gleda vedno 64 možnosti
-                                for a in range(8):
-                                        for b in range(8):
-                                                if ((i,j),(a,b)) in pojej:
-                                                        sez_vseh_iz_pozicije.append(((i,j),(a,b)))
-                                                        self.kanvas.create_rectangle(a*100 - 50, b*100 + 50,
-                                                                                     a*100 - 50, b*100 + 50,
-                                                                                     outline="#000000", fill="#1020FF")
+                                if premakni != []:
+                                        for ((x,y), (a,b)) in premakni:
+                                                if x == i and y == j:
+                                                        premakni_iz_polja.append(((i,j),(a,b)))
+                                if pojej != []:
+                                         for ((x,y), (a,b)) in pojej:
+                                                if x == i and y == j:
+                                                        pojej_iz_polja.append(((i,j),(a,b)))
+                        print(pojej_iz_polja)
+               
+                        if pojej != [] and pojej_iz_polja == []:
+                                self.napis.set("Izberi figuro, ki mora pojesti!")
+                                return
+                        if len(pojej_iz_polja) > 0 or len(premakni_iz_polja) > 0:
+                                #Možna je poteza
+                                if len(pojej_iz_polja) > 0:
+                                        
+                                        seznam_vseh_iz_pozicije = pojej_iz_polja
+                                        for ((i,j),(a,b)) in seznam_vseh_iz_pozicije:
+                                                 self.kanvas.create_rectangle(a*100 - 50, b*100 + 50, a*100 - 50, b*100 + 50,outline="#000000", fill="#1020FF", tag="oznaka")
+
+                                elif len(premakni_iz_polja) > 0:
+                                        seznam_vseh_iz_pozicije = premakni_iz_polja
+                                        for ((i,j),(a,b)) in seznam_vseh_iz_pozicije:
+                                                self.kanvas.create_rectangle(a*100 - 50, b*100 + 50, a*100 - 50, b*100 + 50,outline="#000000", fill="#1020FF", tag="oznaka")
+
+                        else:
+                                self.napis.set("Izberi figuro, ki lahko naredi potezo!")
+                                return
+                                
+                                
                         print((i,j))
                         print(sez_vseh_iz_pozicije)
                         if len(sez_vseh_iz_pozicije) > 0:
                                 # Gremo v drugo fazo klika
                                 # XXX kaj pa, če bi označili še tistega, na katerega je kliknil?
                                 print ("Gremo v fazo 2")
-                                self.podatek = sez_vseh_iz_pozicije
-                                self.prvi_klik = True
+                                self.prenesene_poteze = sez_vseh_iz_pozicije
+                                self.opravljen_klik1 = True
 
                 else:
                         print ("Pa smo v fazi 2")
                         # XXX takole pobrišemo: self.kanvas.delete("oznaka")
-                        sez_vseh_iz_pozicije = self.podatek
+                        sez_vseh_iz_pozicije = self.prenesene_poteze
                         print(sez_vseh_iz_pozicije)
                         assert (len(sez_vseh_iz_pozicije) > 0), "druga faza klika"
                         # To je drugi klik
@@ -206,15 +233,15 @@ class Gui():
                                         # Lahko izvedemo potezo
                                         print("naredimo potezo {0}".format(((a,b),(c,d))))
                                         if self.igra.na_potezi == CRNI:
-                                                self.igrc.klik(((a,b),(c,d)))
+                                                 self.igrc.klik(((a,b),(c,d)))
                                         elif self.igra_na_potezi == BELI:
                                                 self.igrb.klik(((a,b),(c,d)))
                                         else:
                                                 assert False, "čuden igralec"
                         print("smo končali fazo 2")
                         # Gremo nazaj v fazo 1
-                        self.podatek = []
-                        self.prvi_klik = False
+                        self.prenesene_poteze = []
+                        self.opravljen_klik1 = False
 
         def naredi_potezo(self,a,p):
                 # a so stare koordinate, ki jih dobimo s klikom, p pa nove
@@ -222,7 +249,7 @@ class Gui():
                 # kanvas.coords
                 (k,l) = a
                 (m,n) = p
-                id_1 = slovar_figur[self.deska[k][l]]
+                id_1 = self.slovar_figur[self.deska[k][l]]
                 print(id_1)
                 igralec = self.igra.na_potezi
                 r = self.igra.naredi_potezo(a,p)

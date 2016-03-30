@@ -17,9 +17,8 @@ NI_KONEC = "ni konec"
 GLOBINA = 3
 
 class Clovek():
-    def __init__(self, gui, smer):
+    def __init__(self, gui):
         self.gui = gui
-        self.smer = smer
         
     def igraj(self):
         pass
@@ -88,8 +87,6 @@ def nasprotnik(igralec):
 class Igra():
     def __init__(self):
 
-        # None spremeniti v gui ko bo definirano
-
         self.deska = [[Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False],
                       [False, Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI)],
                       [Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False],
@@ -120,6 +117,7 @@ class Igra():
         (self.deska,self.na_potezi) = self.zgodovina.pop()
 
     def veljavne_poteze(self, igr):
+        # igr pomeni igralca
         smer = (1 if igr == CRNI else -1)
         premakni = []
         pojej = []
