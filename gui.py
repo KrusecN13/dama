@@ -12,6 +12,11 @@ class Gui():
         TAG_FIGURA = 'figura'
         
         def __init__(self, master=None):
+                podatek = []
+                self.podatek = podatek 
+                prvi_klik = False
+                self.prvi_klik = prvi_klik
+                
                 self.igra = None
                 
                 self.igrc = None
@@ -73,7 +78,7 @@ class Gui():
                                         a = self.kanvas.create_oval(i*100 + 15, j*100 + 15, i*100 + 85, j*100 + 85, fill='#9EB5BA', outline='#000000') 
                                         slovar_figur[Figura('igrB')]=a
                                         
-                #print(slovar_figur)
+                print(slovar_figur)
 ##          na koncu inita: izbira igralcev (veže na funkcijo izbira_igralca,
 ##          ta dela naprej)
 #coords
@@ -126,68 +131,95 @@ class Gui():
         def prekini_igralca(self):
                 logging.debug("Prekinjam igralce")
                 self.igra.na_potezi.prekini()
+                
+        def zbrisi_figuro(self,polje):
+                (a,b) = polje
+                self.kanvas.delete(slovar_figur[self.deska[a][b]])
+                del slovar_figur[self.deska[a][b]]
+                self.deska[a][b] = None
+                
+        
 
 
         def kanvas_klik1(self,event1):
-        # dobiva koordinate stare pozicije
-                i = event1.x // 100
-                j = event1.y // 100
-                sez_vseh_iz_pozicije = []
-                (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
-                if pojej == [] and premakni == []:
-                        pass
-                elif pojej == []:
-                        for a in range(8):
-                                for b in range(8):
-                                        if ((i,j),(a,b)) in premakni:
-                                                sez_vseh_iz_pozicije.append(((i,j),(a,b)))
-                                                self.kanvas.create_rectangle(i*100 - 50,i*100 + 50,
-                                                    i*100 - 50,i*100 + 50,
-                                                    outline="#000000", fill="#1020FF")         
+                if self.prvi_klik == False:
+        
+                        i = event1.x // 100
+                        j = event1.y // 100
+                        sez_vseh_iz_pozicije = []
+                        (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
+                        if pojej == [] and premakni == []:
+                                self.napis.set("Izberi drugo figuro!")
+                                return
+                        elif pojej == []:
+                                for a in range(8):
+                                        for b in range(8):
+                                                if ((i,j),(a,b)) in premakni:
+                                                        sez_vseh_iz_pozicije.append(((i,j),(a,b)))
+                                                        self.kanvas.create_rectangle(i*100 - 50,i*100 + 50,
+                                                            i*100 - 50,i*100 + 50,
+                                                            outline="#000000", fill="#1020FF")         
                         
+                        else:
+                                for a in range(8):
+                                        for b in range(8):
+                                                if ((i,j),(a,b)) in pojej:
+                                                        sez_vseh_iz_pozicije.append(((i,j),(a,b)))
+                                                        self.kanvas.create_rectangle(i*100 - 50,i*100 + 50,
+                                                            i*100 - 50,i*100 + 50,
+
+                                                        outline="#000000", fill="#1020FF")
+                        print((i,j))
+                        print(sez_vseh_iz_pozicije)
+                        self.podatek = sez_vseh_iz_pozicije
+                        self.prvi_klik = True
+
                 else:
-                        for a in range(8):
-                                for b in range(8):
-                                        if ((i,j),(a,b)) in pojej:
-                                                sez_vseh_iz_pozicije.append(((i,j),(a,b)))
-                                                self.kanvas.create_rectangle(i*100 - 50,i*100 + 50,
-                                                    i*100 - 50,i*100 + 50,
-
-                                                outline="#000000", fill="#1020FF")
-                print((i,j))
-                print(sez_vseh_iz_pozicije)
-                if sez_vseh_iz_pozicije != []:
-                        self.kanvas.unbind("<Button-1>")
-                        self.kanvas.bind("<Button-1>", self.kanvas_klik2)
-                return sez_vseh_iz_pozicije
-
-                       ##problem: retturn ne sme bit seznam, ampak klik!
-#naslednji cilj: zdru�itev obeh klikov, oba morta vrnt neki
-
-                                          
-                
-
-        def kanvas_klik2(self,event2):
-        # dobiva nove koordinate in narediva potezo ce je med veljavnim
-                klik1 = [((2,2),(3,3))] #neka cifra za poskus
-                if klik1 == []:
-                        pass
-                i = event2.x // 100
-                j = event2.y // 100
-                for (a,b),(c,d) in klik1:
-                         if (c,d) == (i,j):
-                                self.igra.na_potezi.klik(((a,b),(c,d)))
-                                print("pridem do sem")
-                                self.kanvas.unbind("<Button-1>")
-                                self.kanvas.bind("<Button-1>", self.kanvas_klik1)
-                         else:
+   
+                        klik1 = self.podatek
+                        print(klik1)
+                        if klik1 == []:
                                 pass
-                print("NEKI")
+                        i = event1.x // 100
+                        j = event1.y // 100
+                        for (a,b),(c,d) in klik1:
+                                 if (c,d) == (i,j):
+                                        self.igra.na_potezi.klik(((a,b),(c,d)))
+                                        print("pridem do sem")
+                                        self.prvi_klik = False
+                                 else:
+                                        self.prvi_klik = False
+                        print("NEKI")
 
         def naredi_potezo(self,a,p):
         # a so stare koordinate, ki jih dobimo s klikom, p pa nove
+
+        # kanvas.coords
+                (k,l) = a
+                (m,n) = p
+                id_1 = slovar_figur[self.deska[k][l]]
+                print(id_1)
                 igralec = self.igra.na_potezi
-                self.igra.naredi_potezo(a,p)
+                r = self.igra.naredi_potezo(a,p)
+                (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
+                if (a,p) in pojej:
+                        kanvas.coords(id_1,p)
+                        self.zbrisi_figuro(((m+k)//2),((l+n)/2))
+                if (a,p) in premakni:
+                        kanvas.coords(id_1,p)
+                pass
+                        
+                        
+##                if r == None:
+##                        pass
+##                else:
+##                        if r == NI_KONEC:
+##                                
+                        
+                        
+                
+                
+                
 
                 
                 
