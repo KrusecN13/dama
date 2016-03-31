@@ -11,8 +11,8 @@ import logging
 ##* je_veljavna(self,i,j)
 ##* zmagovalec(self)
 
-CRNI = 'C'
-BELI = 'B'
+CRNI = 'CRNI'
+BELI = 'BELI'
         
 NI_KONEC = "ni konec"
 GLOBINA = 3

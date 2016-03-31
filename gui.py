@@ -120,16 +120,16 @@ class Gui():
                 self.igrc = igrc
                 self.igrb = igrb
 
-                self.napis.set("Na potezi je crni")
+                self.napis.set("Na potezi je CRNI")
                 self.igrc.igraj()
 
             
 
         def koncaj_igro(self,zmagovalec):
                 if zmagovalec == CRNI:
-                        self.napis.set("Zmagal je crni!")
+                        self.napis.set("Zmagal je CRNI!")
                 elif zmagovalec == BELI:
-                        self.napis.set("Zmagal je beli!")
+                        self.napis.set("Zmagal je BELI!")
 
         def izhod(self):
                 # zapri okno, prekini igralce,                 
@@ -242,7 +242,7 @@ class Gui():
                                         print("naredimo potezo {0}".format(((a,b),(c,d))))
                                         if self.igra.na_potezi == CRNI:
                                                  self.igrc.klik(((a,b),(c,d)))
-                                        elif self.igra_na_potezi == BELI:
+                                        elif self.igra.na_potezi == BELI:
                                                 self.igrb.klik(((a,b),(c,d)))
                                         else:
                                                 assert False, "čuden igralec"
@@ -270,6 +270,7 @@ class Gui():
                         self.zbrisi_figuro(((m+k)//2),((l+n)//2))
                 elif (a,p) in premakni:
                         self.kanvas.coords(id_1,p)
+                self.napis.set("Na potezi je {0}".format(self.igra.na_potezi))
                 
                                                     
                         
