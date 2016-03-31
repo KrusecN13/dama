@@ -104,7 +104,7 @@ class Gui():
                                         #self.slovar_figur[fig]=a
                                         self.igra.deska[j][i] = fig
                                         
-                print(self.igra.deska)
+                #print(self.igra.deska)
 
 
                 
@@ -153,7 +153,7 @@ class Gui():
         
         def kanvas_klika(self, event):
                 if not self.opravljen_klik1:
-                        print('zacetek faze 1')
+                        #print('zacetek faze 1')
                         # To je prvi klik
                         i = event.x // 100
                         j = event.y // 100
@@ -239,7 +239,7 @@ class Gui():
                         for (a,b),(c,d) in sez_vseh_iz_pozicije:
                                  if (c,d) == (i,j):
                                         # Lahko izvedemo potezo
-                                        print("naredimo potezo {0}".format(((a,b),(c,d))))
+                                        #print("naredimo potezo {0}".format(((a,b),(c,d))))
                                         if self.igra.na_potezi == CRNI:
                                                  self.igrc.klik(((a,b),(c,d)))
                                         elif self.igra.na_potezi == BELI:
@@ -255,21 +255,26 @@ class Gui():
         def naredi_potezo(self,a,p):
                 # a so stare koordinate, ki jih dobimo s klikom, p pa nove
 
-                # kanvas.coords
                 (k,l) = a
                 (m,n) = p
                 print('premik',a,p)
-                print(self.igra.deska)
+                #print(self.igra.deska)
                 id_1 = self.igra.deska[l][k].indeks
-                print(id_1)
+                print("indeks",id_1)
                 igralec = self.igra.na_potezi
-                r = self.igra.naredi_potezo(a,p)
                 (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
+                r = self.igra.naredi_potezo(a,p)
+                #print("za r-jom")
                 if (a,p) in pojej:
+                        print("pred coords", a)
                         self.kanvas.coords(id_1,p)
                         self.zbrisi_figuro(((m+k)//2),((l+n)//2))
                 elif (a,p) in premakni:
+                        print("pred coords")
                         self.kanvas.coords(id_1,p)
+                        print("za coords")
+                        print(self.igra.deska)
+                
                 self.napis.set("Na potezi je {0}".format(self.igra.na_potezi))
                 
                                                     
