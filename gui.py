@@ -43,13 +43,13 @@ class Gui():
                                                                              Clovek(self)))
                 nova_igra_menu.add_command(label = "Clovek - Racunalnik",
                                            command = lambda: self.zacni_igro(Clovek(self),
-                                                                             Racunalnik(self, Minimax(globina))))
+                                                                             Racunalnik(self, Minimax(3))))
                 nova_igra_menu.add_command(label = "Racunalnik - Clovek",
-                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(globina)),
+                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
                                                                              Clovek(self)))
                 nova_igra_menu.add_command(label = "Racunalnik - Racunalnik",
-                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(globina)),
-                                                                             Racunalnik(self, Minimax(globina))))
+                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
+                                                                             Racunalnik(self, Minimax(3))))
 
 
                 
@@ -113,6 +113,7 @@ class Gui():
                 self.igra = Igra()
                 self.prekini_igralca()
                 self.kanvas.delete(Gui.TAG_FIGURA)
+                self.kanvas.delete(Gui.TAG_KROG)
                 self.postavi_figure()                
 
         
@@ -267,11 +268,11 @@ class Gui():
                 #print("za r-jom")
                 if (a,p) in pojej:
                         print("pred coords", a)
-                        self.kanvas.coords(id_1,p)
-                        self.zbrisi_figuro(((m+k)//2),((l+n)//2))
+                        self.kanvas.coords(id_1,100*p)
+                        self.zbrisi_figuro(100*((m+k)//2),100*((l+n)//2))
                 elif (a,p) in premakni:
                         print("pred coords")
-                        self.kanvas.coords(id_1,p)
+                        self.kanvas.coords(id_1,100*p)
                         print("za coords")
                         print(self.igra.deska)
                 
