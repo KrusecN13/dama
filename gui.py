@@ -160,7 +160,7 @@ class Gui():
                         j = event.y // 100
                         #print('na potezi   =',self.igra.na_potezi)
                         (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
-                        print(premakni)
+                        print("POJEJ",pojej)
                         pojej_iz_polja = []
                         premakni_iz_polja = []
 
