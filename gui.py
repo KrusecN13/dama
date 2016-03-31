@@ -160,7 +160,7 @@ class Gui():
                         j = event.y // 100
                         #print('na potezi   =',self.igra.na_potezi)
                         (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
-                        
+                        print(premakni)
                         pojej_iz_polja = []
                         premakni_iz_polja = []
 
@@ -275,6 +275,7 @@ class Gui():
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
                         print("za coords")
                         print(self.igra.deska)
+                        
                 
                 self.napis.set("Na potezi je {0}".format(self.igra.na_potezi))
                 

@@ -131,14 +131,13 @@ class Igra():
                 if self.deska[j][i] != False and self.deska[j][i] != None:
                     if self.deska[j][i].igralec == igr :
                         if 0 <= (i-2) <= 7 and 0 <= (j+2*smer) <= 7 and self.deska[j+2*smer][i-2] == None and self.deska[j+1*smer][i-1] == Figura(nasprotnik(igr)):
-                            pojej.append(((j,i), (j-2, i+2*smer)))
+                            pojej.append(((j,i), (i-2, j+2*smer)))
                         if 0 <= (i+2) <= 7 and 0 <= (j+2*smer) <= 7 and self.deska[j+2*smer][i+2] == None and self.deska[j+1*smer][i+1] == Figura(nasprotnik(igr)):
-                            pojej.append(((j,i), (j+2, i+2*smer)))
-                    
+                            pojej.append(((j,i), (i+2, j+2*smer)))
                         if 0 <= (i-1) <= 7 and 0 <= (j+1*smer) <= 7 and self.deska[j+1*smer][i-1] == None:
-                            premakni.append(((j, i), (j-1, i+1*smer)))
+                            premakni.append(((i,j),(i-1,j+1*smer)))
                         if 0 <= (i+1) <= 7 and 0 <= (j+1*smer) <= 7 and self.deska[j+1*smer][i+1] == None:
-                            premakni.append(((j,i), (j+1, i+1*smer)))
+                            premakni.append(((i,j),(i+1,j+1*smer)))
         
         return (pojej, premakni)
                     
@@ -183,12 +182,12 @@ class Igra():
         for j in premakni:
             if (p,r) == j:
                 self.shrani_potezo()
-                self.deska[r1][r2] = self.deska[p1][p2]
-                self.deska[p1][p2] = None
+                self.deska[r2][r1] = self.deska[p2][p1]
+                self.deska[p2][p1] = None
                 zmagovalec = self.stanje()
                 
-                if r1 == 0 or r1 == 7:
-                    self.deska[r1][r2].dama = True
+                if r2 == 0 or r2 == 7:
+                    self.deska[r2][r1].dama = True
                     
                 if zmagovalec == NI_KONEC:
                     self.na_potezi = nasprotnik(self.na_potezi)
