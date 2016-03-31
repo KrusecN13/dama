@@ -126,19 +126,19 @@ class Igra():
         smer = (1 if igr == CRNI else -1)
         premakni = []
         pojej = []
-        for i in range(8):
-            for j in range(8):
+        for j in range(8):
+            for i in range(8):
                 if self.deska[j][i] != False and self.deska[j][i] != None:
                     if self.deska[j][i].igralec == igr :
                         if 0 <= (i-2) <= 7 and 0 <= (j+2*smer) <= 7 and self.deska[j+2*smer][i-2] == None and self.deska[j+1*smer][i-1] == Figura(nasprotnik(igr)):
-                            pojej.append(((i,j), (i-2, j+2*smer)))
+                            pojej.append(((j,i), (j-2, i+2*smer)))
                         if 0 <= (i+2) <= 7 and 0 <= (j+2*smer) <= 7 and self.deska[j+2*smer][i+2] == None and self.deska[j+1*smer][i+1] == Figura(nasprotnik(igr)):
-                            pojej.append(((i,j), (i+2, j+2*smer)))
+                            pojej.append(((j,i), (j+2, i+2*smer)))
                     
                         if 0 <= (i-1) <= 7 and 0 <= (j+1*smer) <= 7 and self.deska[j+1*smer][i-1] == None:
-                            premakni.append(((i,j), (i-1, j+1*smer)))
+                            premakni.append(((j, i), (j-1, i+1*smer)))
                         if 0 <= (i+1) <= 7 and 0 <= (j+1*smer) <= 7 and self.deska[j+1*smer][i+1] == None:
-                            premakni.append(((i,j), (i+1, j+1*smer)))
+                            premakni.append(((j,i), (j+1, i+1*smer)))
         
         return (pojej, premakni)
                     

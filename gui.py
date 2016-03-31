@@ -268,11 +268,11 @@ class Gui():
                 #print("za r-jom")
                 if (a,p) in pojej:
                         print("pred coords", a)
-                        self.kanvas.coords(id_1,100*p)
+                        self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
                         self.zbrisi_figuro(100*((m+k)//2),100*((l+n)//2))
                 elif (a,p) in premakni:
                         print("pred coords")
-                        self.kanvas.coords(id_1,100*p)
+                        self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
                         print("za coords")
                         print(self.igra.deska)
                 
