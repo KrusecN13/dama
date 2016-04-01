@@ -146,8 +146,8 @@ class Gui():
                 
         def zbrisi_figuro(self,polje):
                 (a,b) = polje
-                self.kanvas.delete(self.igra.deska[a][b].indeks)
-                self.igra.deska[a][b] = None
+                self.kanvas.delete(self.igra.deska[b][a].indeks)
+                self.igra.deska[b][a] = None
                 
         
 
@@ -270,12 +270,11 @@ class Gui():
                 if (a,p) in pojej:
                         print("pred coords", a)
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
-                        self.zbrisi_figuro(100*((m+k)//2),100*((l+n)//2))
+                        self.zbrisi_figuro(((m+k)//2,(l+n)//2))
                 elif (a,p) in premakni:
                         print("pred coords")
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
                         print("za coords")
-                        print(self.igra.deska)
                         
                 
                 self.napis.set("Na potezi je {0}".format(self.igra.na_potezi))

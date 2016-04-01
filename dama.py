@@ -51,7 +51,7 @@ class Racunalnik():
 
     def preveri(self):
         if self.algoritem.poteza is not None:
-            self.gui.naredi_potezo(a,self.algoritem.poteza)
+            self.gui.naredi_potezo(self.algoritem.poteza[0],self.algoritem.poteza[1])
             self.vlakno = None
         else:
             self.gui.kanvas.after(100, self.preveri)
@@ -110,6 +110,7 @@ class Igra():
 # seznamu zgodovina pripne par (trenutna pozicija na deski, igralec na potezi)
         a = [self.deska[j][:] for j in range(8)]
         self.zgodovina.append((a, self.na_potezi))
+      #  print("Zgodovina (append):", len(self.zgodovina))
         
 
     def kopija(self):
@@ -120,6 +121,7 @@ class Igra():
     
     def razveljavi(self):
         (self.deska,self.na_potezi) = self.zgodovina.pop()
+       # print("Zgodovina (pop):", len(self.zgodovina))
 
     def veljavne_poteze(self, igr):
         # igr pomeni igralca
@@ -166,12 +168,14 @@ class Igra():
         (p1,p2) = p
         (r1,r2) = r
         (pojej, premakni) = self.veljavne_poteze(self.na_potezi)
+        assert (p,r) in premakni or (p,r) in pojej
+        
         for i in pojej:
             if (p,r) == i:
                 self.shrani_potezo()
                 self.deska[r2][r1] = self.deska[p2][p1]
                 self.deska[p2][p1] = None
-                self.deska[(p2+r2)//2][(p1+r1)//2] = None
+##                self.deska[(p2+r2)//2][(p1+r1)//2] = None
                 zmagovalec = self.stanje()
                 
                 if r2 == 0 or r2 == 7:
@@ -221,7 +225,7 @@ class Igra():
 ##    * premakni(self)
 class Minimax():
     def __init__(self, globina):
-        self.globina = GLOBINA
+        self.globina = globina
         self.prekinitev = False
         self.igra = None
         self.jaz = None
@@ -251,6 +255,7 @@ class Minimax():
     vrednost_st_pojej = 200
     
     def vrednost_polja(self):
+        #global vrednost_st_figur, vrednost_st_premikov, vrednost_st_pojej
         st_figur = 0
         for i in range(8):
             for j in range(8):
@@ -261,7 +266,7 @@ class Minimax():
         st_pojej = len(pojej)
         st_premikov = len(premakni)
 #        self.vrednost = vrednost_st_figur * st_figur + vrednost_st_premikov * st_premikov + vrednost_st_pojej * st_pojej
-        return (vrednost_st_figur * st_figur + vrednost_st_premikov * st_premikov + vrednost_st_pojej * st_pojej)
+        return (Minimax.vrednost_st_figur * st_figur + Minimax.vrednost_st_premikov * st_premikov + Minimax.vrednost_st_pojej * st_pojej)
 
 
         
@@ -279,31 +284,35 @@ class Minimax():
             elif zmagovalec == nasprotnik(self.jaz):
                 return (None, -Minimax.ZMAGA)
         elif zmagovalec == NI_KONEC:
-            if self.globina == 0:
+            if globina == 0:
                 return (None, self.vrednost_polja())
             else:
                 if maksimiziramo:
                     sez = self.igra.veljavne_poteze(self.jaz)[0]
                     if sez == []:
                         sez = self.igra.veljavne_poteze(self.jaz)[1]
+              #      print(sez)
                     najboljsa_poteza = None
                     vrednost_najboljse = -Minimax.NESKONCNO
                     for (p1,p2) in sez:
+                 #       print("Minimax: max", p1, p2)
                         self.igra.naredi_potezo(p1,p2)
-                        vrednost = self.minimax(self.globina-1, not maksimiziramo)[1]
+                        vrednost = self.minimax(globina-1, not maksimiziramo)[1]
                         self.igra.razveljavi()
                         if vrednost > vrednost_najboljse:
                             vrednost_najboljse = vrednost
                             najboljsa_poteza = (p1,p2)
                 else:
-                    sez = self.igra.veljavne_poteze(self.jaz)[0]
+                    sez = self.igra.veljavne_poteze(nasprotnik(self.jaz))[0]
                     najboljsa_poteza = None
                     vrednost_najboljse = Minimax.NESKONCNO
                     if sez == []:
-                        sez = self.igra.veljavne_poteze(self.jaz)[1]
+                        sez = self.igra.veljavne_poteze(nasprotnik(self.jaz))[1]
+               #     print(sez)
                     for (p1,p2) in sez:
+                     #   print("Minimax: min", p1, p2)
                         self.igra.naredi_potezo(p1,p2)
-                        vrednost = self.minimax(self.globina-1, not maksimiziramo)[1]
+                        vrednost = self.minimax(globina-1, not maksimiziramo)[1]
                         self.igra.razveljavi()
                         if vrednost < vrednost_najboljse:
                             vrednost_najboljse = vrednost
