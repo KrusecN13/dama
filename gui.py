@@ -299,6 +299,8 @@ class Gui():
                                 self.kanvas.itemconfig(id_1, fill = "#66B2FF")
                         elif self.igra.deska[n][m].igralec == CRNI:
                                 self.kanvas.itemconfig(id_1, fill = "#660000")
+                if self.igra.stanje != (NI_KONEC):
+                        self.koncaj_igro(nasprotnik(self.igra.na_potezi))
                 #določi, ali mora računalnik kaj narediti glede na to, ali je na potezi
                 if self.igrc != Clovek(self) and self.igrb != Clovek(self):
                         if self.igra.na_potezi == BELI:
