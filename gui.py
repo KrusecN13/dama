@@ -41,12 +41,21 @@ class Gui():
                 nova_igra_menu.add_command(label = "Clovek - Clovek",
                                            command = lambda: self.zacni_igro(Clovek(self),
                                                                              Clovek(self)))
-                nova_igra_menu.add_command(label = "Clovek - Racunalnik",
+                nova_igra_menu.add_command(label = "Clovek - Racunalnik (lažje)",
+                                           command = lambda: self.zacni_igro(Clovek(self),
+                                                                             Racunalnik(self, Random(self))))
+                nova_igra_menu.add_command(label = "Clovek - Racunalnik (težje)",
                                            command = lambda: self.zacni_igro(Clovek(self),
                                                                              Racunalnik(self, Minimax(3))))
-                nova_igra_menu.add_command(label = "Racunalnik - Clovek",
+
+                
+                nova_igra_menu.add_command(label = "Racunalnik - Clovek (lažje)",
+                                           command = lambda: self.zacni_igro(Racunalnik(self, Random(self)),
+                                                                             Clovek(self)))
+                nova_igra_menu.add_command(label = "Racunalnik - Clovek (težje)",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
                                                                              Clovek(self)))
+                
                 nova_igra_menu.add_command(label = "Racunalnik - Racunalnik",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
                                                                              Racunalnik(self, Minimax(3))))

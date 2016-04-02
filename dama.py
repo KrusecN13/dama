@@ -1,6 +1,6 @@
 import threading # za vzporedno izvajanje vlaken
 import logging   # za odpravljanje napak
-
+from random import *
 
 CRNI = 'CRNI'
 BELI = 'BELI'
@@ -72,7 +72,7 @@ class Racunalnik():
             self.vlakno.join()
             self.vlakno = None
 
-    def klik(self,a, p):
+    def klik(self,p):
         #Ker igra racunalnik se ne odzove na klike!
         pass           
         
@@ -355,6 +355,7 @@ class Minimax():
             # Dobili smo sporočilo, da moramo prekiniti.
             logging.debug ("Minimax prekinja, globina = {0}".format(globina))
             return (None,0)
+        
         zmagovalec = self.igra.stanje()
         if zmagovalec in (CRNI,BELI):
             # Če je igre konec, vrnemo njeno vrednost.
@@ -410,15 +411,57 @@ class Minimax():
             
                         
             
-                          
 
-class Alfa_Beta():
-    pass
+#####################
+## Razred Random:
+#####################
             
 
+class Random():
+    # Ta razred uporablja računalnik in izbira naključne poteze
+    def __init__(self,gui):
+        self.gui = gui
+        self.igra = None
+        self.poteza = None
+        self.prekinitev = False
+
+    def najdi_potezo(self, igra):
+        self.igra = igra
+        self.prekinitev = False
+        self.poteza = None
+        (poteza, vrednost) = self.nakljucna_izbira()
+        self.igra = None
+        if not self.prekinitev:
+            logging.debug("Nakljucna izbira: ()".format(poteza))
+            self.poteza = poteza
+
+    def prekini(self):
+        self.prekinitev = True
 
 
+    def nakljucna_izbira(self):
+        if self.prekinitev:
+            logging.debug("Naključna izbira se prekinja")
+            return (None, 0)
+        zmagovalec = self.igra.stanje()
+        if zmagovalec in (CRNI, BELI):
+            # Igre je konec.
+            return None
+        elif zmagovalec == NI_KONEC:
+            return(self.izberi())
+        else:
+            assert False, "Random: nedefinirano stanje igre"
 
+    def izberi(self):
+        (pojej, premakni) = self.gui.igra.veljavne_poteze()
+        if pojej == []:
+            if len(premakni) > 0:
+                return choice(premakni)
+        elif len(pojej) > 0:
+            return choice(pojej)
+        
+            
+        
 
 
 
