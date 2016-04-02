@@ -326,25 +326,28 @@ class Minimax():
 
     ZMAGA = 10000000 #Vrednost zmage.
     NESKONCNO = ZMAGA + 100
-    vrednost_st_figur = 300
-    vrednost_st_premikov = 100
-    vrednost_st_pojej = 200
+    vrednost_st_figur = 500
+    vrednost_st_premikov = 10
+    vrednost_st_pojej = 5
+    vrednost_st_figur_nasp = -400
     
     def vrednost_polja(self):
         # Oceni vrednost polja, glede na število figur, ki jih še imamo,
         # glede na število možnih premikov in možnih odvzemov nasprotnikove
         # figure.
         st_figur = 0
+        st_figur_nasp = 0
         for i in range(8):
             for j in range(8):
                 if self.igra.deska[j][i] == Figura(self.igra.na_potezi):
                     st_figur += 1
-
+                if self.igra.deska[j][i] == Figura(nasprotnik(self.igra.na_potezi)):
+                    st_figur_nasp += 1
         (pojej, premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
         st_pojej = len(pojej)
         st_premikov = len(premakni)
 
-        return (Minimax.vrednost_st_figur * st_figur + Minimax.vrednost_st_premikov * st_premikov + Minimax.vrednost_st_pojej * st_pojej)
+        return (Minimax.vrednost_st_figur * st_figur + Minimax.vrednost_st_premikov * st_premikov + Minimax.vrednost_st_pojej * st_pojej + st_figur_nasp * Minimax.vrednost_st_figur_nasp)
 
 
         
@@ -409,9 +412,14 @@ class Minimax():
                 return (najboljsa_poteza, vrednost_najboljse)
         else:
             assert False, "Minimax: nedefinirano stanje igre "
-            
-                        
-            
+
+##    def minimax_test(self, globina, maksimiziramo):
+##        try:
+##            return self.minimax(globina,maksimiziramo)
+##        except AssertionError:
+##            return self.minimax_test((globina-1), maksimiziramo)
+##
+        #tudi v prejšnih vrsticah spremeniti na minimax.test
 
 #####################
 ## Razred Random:

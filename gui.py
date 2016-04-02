@@ -218,8 +218,9 @@ class Gui():
                         if len(pojej_iz_polja) > 0 or len(premakni_iz_polja) > 0:
                                 # Vse možne poteze označimo na kanvasu, da uporabnik lahko izbere,
                                 # katero bo naredil.
-                                id_1 = self.igra.deska[j][i].indeks
-                                self.kanvas.itemconfig(id_1, outline = "#FF0000")
+                                #hkrati označimo veljavno figuro za potezo z rdečo obrobo
+                                self.id_1 = self.igra.deska[j][i].indeks
+                                self.kanvas.itemconfig(self.id_1, outline = "#FF0000")
                                 if len(pojej_iz_polja) > 0:
                                         
                                         sez_vseh_iz_pozicije = pojej_iz_polja
@@ -272,8 +273,8 @@ class Gui():
                                                 assert False, "čuden igralec"
                         
                         # Gremo nazaj v fazo 1 - pred opravljenim prvim klikom.
-                        id_1 = self.igra.deska[j][i].indeks
-                        self.kanvas.itemconfig(id_1, outline = "#000000")
+                        #zbrišemo rdečo obrobo
+                        self.kanvas.itemconfig(self.id_1, outline = "#000000")
 
                         self.prenesene_poteze = []
                         self.opravljen_klik1 = False
