@@ -292,7 +292,20 @@ class Gui():
                         if self.igra.deska[n][m].igralec == BELI:
                                 self.kanvas.itemconfig(id_1, fill = "#66B2FF")
                         elif self.igra.deska[n][m].igralec == CRNI:
-                                self.kanvas.itemconfig(id_1, fill = "#660000")                                
+                                self.kanvas.itemconfig(id_1, fill = "#660000")
+                #določi, ali mora računalnik kaj narediti glede na to, ali je na potezi
+                if self.igrc != Clovek(self) and self.igrb != Clovek(self):
+                        if self.igra.na_potezi == BELI:
+                                self.igrb.igraj()
+                        elif self.igra.na_potezi == CRNI:
+                                self.igrc.igraj()
+                elif self.igrc != Clovek(self):
+                        if self.igra.na_potezi == CRNI:
+                                self.igrc.igraj()
+                elif self.igrb != Clovek(self):
+                        if self.igra.na_potezi == BELI:
+                                self.igrb.igraj()
+                        
                 
 
                 
