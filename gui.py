@@ -285,6 +285,10 @@ class Gui():
                 igralec = self.igra.na_potezi
                 (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
                 r = self.igra.naredi_potezo(a,p)
+                if igralec == CRNI:
+                        self.napis.set("Na potezi je BELI")
+                elif igralec == BELI:
+                        self.napis.set("Na potezi je CRNI")
                 if (a,p) in pojej:
                         # Figuro premaknemo, nasprotnikovo pa zbrišemo.
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
@@ -299,7 +303,8 @@ class Gui():
                                 self.kanvas.itemconfig(id_1, fill = "#66B2FF")
                         elif self.igra.deska[n][m].igralec == CRNI:
                                 self.kanvas.itemconfig(id_1, fill = "#660000")
-                if self.igra.stanje != (NI_KONEC):
+                print(self.igra.stanje())
+                if self.igra.stanje() != "ni konec":
                         self.koncaj_igro(nasprotnik(self.igra.na_potezi))
                 #določi, ali mora računalnik kaj narediti glede na to, ali je na potezi
                 if self.igrc != Clovek(self) and self.igrb != Clovek(self):

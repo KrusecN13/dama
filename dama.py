@@ -260,6 +260,8 @@ class Igra():
                 if zmagovalec == NI_KONEC:
                     # Če igre še ni konec, je na vrsti nasprotnik.
                     self.na_potezi = nasprotnik(self.na_potezi)
+                    
+                    
                 else:
                     # Če je igre konec nam vrne zmagovalca.
                     self.na_potezi = None
