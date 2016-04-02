@@ -41,18 +41,18 @@ class Gui():
                 nova_igra_menu.add_command(label = "Clovek - Clovek",
                                            command = lambda: self.zacni_igro(Clovek(self),
                                                                              Clovek(self)))
-                nova_igra_menu.add_command(label = "Clovek - Racunalnik (lažje)",
+                nova_igra_menu.add_command(label = "Clovek - Racunalnik (Random)",
                                            command = lambda: self.zacni_igro(Clovek(self),
                                                                              Racunalnik(self, Random(self))))
-                nova_igra_menu.add_command(label = "Clovek - Racunalnik (težje)",
+                nova_igra_menu.add_command(label = "Clovek - Racunalnik (Minimax) ",
                                            command = lambda: self.zacni_igro(Clovek(self),
                                                                              Racunalnik(self, Minimax(3))))
 
                 
-                nova_igra_menu.add_command(label = "Racunalnik - Clovek (lažje)",
+                nova_igra_menu.add_command(label = "Racunalnik (Random) - Clovek ",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Random(self)),
                                                                              Clovek(self)))
-                nova_igra_menu.add_command(label = "Racunalnik - Clovek (težje)",
+                nova_igra_menu.add_command(label = "Racunalnik (Minimax) - Clovek ",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
                                                                              Clovek(self)))
                 
@@ -218,6 +218,8 @@ class Gui():
                         if len(pojej_iz_polja) > 0 or len(premakni_iz_polja) > 0:
                                 # Vse možne poteze označimo na kanvasu, da uporabnik lahko izbere,
                                 # katero bo naredil.
+                                id_1 = self.igra.deska[j][i].indeks
+                                self.kanvas.itemconfig(id_1, outline = "#FF0000")
                                 if len(pojej_iz_polja) > 0:
                                         
                                         sez_vseh_iz_pozicije = pojej_iz_polja
@@ -250,7 +252,7 @@ class Gui():
                                 self.opravljen_klik1 = True
 
                 else:
-                        
+
                         sez_vseh_iz_pozicije = self.prenesene_poteze
                         # Imamo možne poteze.
                         assert (len(sez_vseh_iz_pozicije) > 0), "druga faza klika"
@@ -270,6 +272,9 @@ class Gui():
                                                 assert False, "čuden igralec"
                         
                         # Gremo nazaj v fazo 1 - pred opravljenim prvim klikom.
+                        id_1 = self.igra.deska[j][i].indeks
+                        self.kanvas.itemconfig(id_1, outline = "#000000")
+
                         self.prenesene_poteze = []
                         self.opravljen_klik1 = False
                         self.kanvas.delete(Gui.TAG_KROG)
