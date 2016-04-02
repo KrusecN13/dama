@@ -11,6 +11,7 @@ class Gui():
 
         TAG_FIGURA = 'figura'
         TAG_KROG = 'krog'
+        TAG_OZNAKA = 'oznaka'
         
         def __init__(self, master=None):
                 self.prenesene_poteze = [] 
@@ -158,9 +159,7 @@ class Gui():
                         # To je prvi klik
                         i = event.x // 100
                         j = event.y // 100
-                        #print('na potezi   =',self.igra.na_potezi)
                         (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
-                        print("POJEJ",pojej)
                         pojej_iz_polja = []
                         premakni_iz_polja = []
 
@@ -205,15 +204,15 @@ class Gui():
                                         
                                         sez_vseh_iz_pozicije = pojej_iz_polja
                                         for ((i,j),(a,b)) in sez_vseh_iz_pozicije:
-                                                 self.kanvas.create_oval(a*100 + 30, b*100 + 30,
+                                                 self.kanvas.create_rectangle(a*100 + 30, b*100 + 30,
                                                                              a*100 + 70, b*100 + 70,
-                                                                             outline="#000000", fill="#00bfff", tag = Gui.TAG_KROG)
+                                                                             outline="#000000", fill="#660033", tag = Gui.TAG_KROG)
                                 elif len(premakni_iz_polja) > 0:
                                         sez_vseh_iz_pozicije = premakni_iz_polja
                                         for ((i,j),(a,b)) in sez_vseh_iz_pozicije:
-                                                self.kanvas.create_oval(a*100 + 30, b*100 + 30,
+                                                self.kanvas.create_rectangle(a*100 + 30, b*100 + 30,
                                                                              a*100 + 70, b*100 + 70,
-                                                                             outline="#000000", fill="#00bfff", tag = Gui.TAG_KROG)
+                                                                             outline="#000000", fill="#660033", tag = Gui.TAG_KROG)
                         else:
                                 self.napis.set("Izberi figuro, ki lahko naredi potezo!")
                                 return
@@ -259,24 +258,23 @@ class Gui():
 
                 (k,l) = a
                 (m,n) = p
-                print('premik',a,p)
-                #print(self.igra.deska)
                 id_1 = self.igra.deska[l][k].indeks
-                print("indeks",id_1)
                 igralec = self.igra.na_potezi
                 (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
                 r = self.igra.naredi_potezo(a,p)
-                #print("za r-jom")
                 if (a,p) in pojej:
-                        print("pred coords", a)
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
                         self.zbrisi_figuro(((m+k)//2,(l+n)//2))
                 elif (a,p) in premakni:
-                        print("pred coords")
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
-                        print("za coords")
                         
+                if self.igra.deska[n][m].dama:
+                        if self.igra.deska[n][m].igralec == BELI:
+                                self.kanvas.itemconfig(id_1, fill = "#66B2FF")
+                        elif self.igra.deska[n][m].igralec == CRNI:
+                                self.kanvas.itemconfig(id_1, fill = "#660000")                                
                 
+
                 self.napis.set("Na potezi je {0}".format(self.igra.na_potezi))
                 
                                                     

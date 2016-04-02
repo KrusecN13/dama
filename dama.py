@@ -1,6 +1,7 @@
 import threading
 import logging
 
+
 # -*- coding: cp1250 -*-
 ##
 ###### Razred Igra: <h4>
@@ -131,20 +132,50 @@ class Igra():
         for j in range(8):
             for i in range(8):
                 if self.deska[j][i] != False and self.deska[j][i] != None:
-                    if self.deska[j][i].igralec == igr :     
-                        if 0 <= (i-2) <= 7 and 0 <= (j+2*smer) <= 7 and self.deska[j+2*smer][i-2] == None:
-                            if self.deska[j+1*smer][i-1]:
-                                if self.deska[j+1*smer][i-1].igralec == nasprotnik(self.na_potezi):
-                                    pojej.append(((i,j), (i-2, j+2*smer)))
-                        if 0 <= (i+2) <= 7 and 0 <= (j+2*smer) <= 7 and self.deska[j+2*smer][i+2] == None:
-                            if self.deska[j+1*smer][i+1]:
-                                if self.deska[j+1*smer][i+1].igralec == nasprotnik(self.na_potezi):
-                                    pojej.append(((i,j), (i+2, j+2*smer)))
-                        if 0 <= (i-1) <= 7 and 0 <= (j+1*smer) <= 7 and self.deska[j+1*smer][i-1] == None:
-                            premakni.append(((i,j),(i-1,j+1*smer)))
-                        if 0 <= (i+1) <= 7 and 0 <= (j+1*smer) <= 7 and self.deska[j+1*smer][i+1] == None:
-                            premakni.append(((i,j),(i+1,j+1*smer)))
-        
+                    if self.deska[j][i].igralec == igr :
+                        if self.deska[j][i].dama:
+                            #4 if stavki za smer = +1
+                            if 0 <= (i-2) <= 7 and 0 <= (j+2) <= 7 and self.deska[j+2][i-2] == None:
+                                 if self.deska[j+1][i-1]:
+                                     if self.deska[j+1][i-1].igralec == nasprotnik(self.na_potezi):
+                                          pojej.append(((i,j), (i-2, j+2)))
+                                          
+                            if 0 <= (i+2) <= 7 and 0 <= (j+2) <= 7 and self.deska[j+2][i+2] == None:
+                                 if self.deska[j+1][i+1]:
+                                    if self.deska[j+1][i+1].igralec == nasprotnik(self.na_potezi):
+                                         pojej.append(((i,j), (i+2, j+2)))
+                            if 0 <= (i-1) <= 7 and 0 <= (j+1) <= 7 and self.deska[j+1][i-1] == None:
+                                  premakni.append(((i,j),(i-1,j+1)))
+                            if 0 <= (i+1) <= 7 and 0 <= (j+1) <= 7 and self.deska[j+1][i+1] == None:
+                                    premakni.append(((i,j),(i+1,j+1)))
+
+                            #4 if stavki za smer =-1
+                            if 0 <= (i-2) <= 7 and 0 <= (j-2) <= 7 and self.deska[j-2][i-2] == None:
+                                 if self.deska[j-1][i-1]:
+                                     if self.deska[j-1][i-1].igralec == nasprotnik(self.na_potezi):
+                                          pojej.append(((i,j), (i-2, j-2)))
+                                          
+                            if 0 <= (i+2) <= 7 and 0 <= (j-2) <= 7 and self.deska[j-2][i+2] == None:
+                                 if self.deska[j-1][i+1]:
+                                    if self.deska[j-1][i+1].igralec == nasprotnik(self.na_potezi):
+                                         pojej.append(((i,j), (i+2, j-2)))
+                            if 0 <= (i-1) <= 7 and 0 <= (j-1) <= 7 and self.deska[j-1][i-1] == None:
+                                  premakni.append(((i,j),(i-1,j-1)))
+                            if 0 <= (i+1) <= 7 and 0 <= (j-1) <= 7 and self.deska[j-1][i+1] == None:
+                                    premakni.append(((i,j),(i+1,j-1)))
+                        else:
+                            if 0 <= (i-2) <= 7 and 0 <= (j+2*smer) <= 7 and self.deska[j+2*smer][i-2] == None:
+                                 if self.deska[j+1*smer][i-1]:
+                                     if self.deska[j+1*smer][i-1].igralec == nasprotnik(self.na_potezi):
+                                          pojej.append(((i,j), (i-2, j+2*smer)))
+                            if 0 <= (i+2) <= 7 and 0 <= (j+2*smer) <= 7 and self.deska[j+2*smer][i+2] == None:
+                                 if self.deska[j+1*smer][i+1]:
+                                    if self.deska[j+1*smer][i+1].igralec == nasprotnik(self.na_potezi):
+                                         pojej.append(((i,j), (i+2, j+2*smer)))
+                            if 0 <= (i-1) <= 7 and 0 <= (j+1*smer) <= 7 and self.deska[j+1*smer][i-1] == None:
+                                  premakni.append(((i,j),(i-1,j+1*smer)))
+                            if 0 <= (i+1) <= 7 and 0 <= (j+1*smer) <= 7 and self.deska[j+1*smer][i+1] == None:
+                                    premakni.append(((i,j),(i+1,j+1*smer)))
         return (pojej, premakni)
                     
                     
@@ -153,7 +184,7 @@ class Igra():
     def stanje(self):
         
         # ugotovi, ali ce imamo zmagovalca in ga vrne, oz. sporoci da ce ni konec igre
-        (pojej, premakni) = self.veljavne_poteze(nasprotnik(self.na_potezi))
+        (pojej, premakni) = self.veljavne_poteze(self.na_potezi)
         if pojej == [] and premakni ==[]:
             return self.na_potezi
         else:
@@ -186,6 +217,7 @@ class Igra():
                     self.na_potezi = nasprotnik(self.na_potezi)
                 else:
                     self.na_potezi = None
+                    print("ZMAGOVALEC")
                     return zmagovalec
         for j in premakni:
             if (p,r) == j:
@@ -275,9 +307,9 @@ class Minimax():
     def minimax(self, globina, maksimiziramo):
          
         if self.prekinitev:
-            logging.debug ("Minimax prekinja, globina = {0}".format(self.globina))
+            logging.debug ("Minimax prekinja, globina = {0}".format(globina))
             return (None,0)
-        (zmagovalec) = self.igra.stanje()
+        zmagovalec = self.igra.stanje()
         if zmagovalec in (CRNI,BELI):
             if zmagovalec == self.jaz:
                 return (None, Minimax.ZMAGA)
