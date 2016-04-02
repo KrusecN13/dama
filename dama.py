@@ -37,7 +37,7 @@ class Clovek():
 class Racunalnik():
     def __init__(self, gui, algoritem):
         self.gui = gui
-        self.algoritem = Minimax(3)
+        self.algoritem = algoritem
         self.vlakno = None
 
     def igraj(self):
@@ -322,7 +322,6 @@ class Minimax():
             logging.debug("minimax: poteza {0}, vrednost {1}".format(poteza, vrednost))
             self.poteza = poteza
 
-
     ZMAGA = 10000000 #Vrednost zmage.
     NESKONCNO = ZMAGA + 100
     vrednost_st_figur = 300
@@ -424,17 +423,18 @@ class Random():
         self.igra = None
         self.poteza = None
         self.prekinitev = False
+        
 
     def najdi_potezo(self, igra):
         self.igra = igra
         self.prekinitev = False
         self.poteza = None
-        (poteza, vrednost) = self.nakljucna_izbira()
+        (prejsna_pozicija, nova_pozicija) = self.nakljucna_izbira()
+        #vrednost je ubistvu drug del poteze??
         self.igra = None
         if not self.prekinitev:
-            logging.debug("Nakljucna izbira: ()".format(poteza))
-            self.poteza = poteza
-
+            logging.debug("Nakljucna izbira: ()".format(prejsna_pozicija, nova_pozicija))
+            self.poteza = (prejsna_pozicija, nova_pozicija)
     def prekini(self):
         self.prekinitev = True
 
@@ -453,7 +453,7 @@ class Random():
             assert False, "Random: nedefinirano stanje igre"
 
     def izberi(self):
-        (pojej, premakni) = self.gui.igra.veljavne_poteze()
+        (pojej, premakni) = self.gui.igra.veljavne_poteze(self.igra.na_potezi)
         if pojej == []:
             if len(premakni) > 0:
                 return choice(premakni)
