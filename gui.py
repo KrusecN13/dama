@@ -56,10 +56,16 @@ class Gui():
                                            command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
                                                                              Clovek(self)))
                 
-                nova_igra_menu.add_command(label = "Racunalnik - Racunalnik",
+                nova_igra_menu.add_command(label = "Racunalnik(Minimax) - Racunalnik(Minimax)",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
                                                                              Racunalnik(self, Minimax(3))))
 
+                nova_igra_menu.add_command(label = "Racunalnik(Minimax) - Racunalnik(Random)",
+                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
+                                                                             Racunalnik(self, Random(self))))
+                nova_igra_menu.add_command(label = "Racunalnik(Random) - Racunalnik(Minimax)",
+                                           command = lambda: self.zacni_igro(Racunalnik(self, Random(self)),
+                                                                             Racunalnik(self, Minimax(3))))
 
                 # Zapri aplikacijo.
                 zapri_menu.add_command(label = "Izhod", command = lambda: self.izhod())
