@@ -11,7 +11,7 @@ Program je napisan s programom Python 3, njegov uporabniški vmesik pa uporablja
 
 * Prvo potezo izvede igralec s črnimi figurami
 * Običajne figure se premikajo diagonalno naprej
-* Če je figura drugega igralca na sosednjem diagonalnem polju v smeri nasprotnika, in je diagonalno za njim prazno polje, potem lahko to figuro 'poješ', kar pomeni: lastno figuro pa premakneš za dve diagonalni polji naprej v smeri, kjer si pojedel nasprotnikovo figuro, to pa odstraniš z igralnega polja
+* Če je figura drugega igralca na sosednjem diagonalnem polju v smeri nasprotnika, in je diagonalno za njim prazno polje, potem lahko to figuro 'poješ', kar pomeni: lastno figuro premakneš za dve diagonalni polji naprej v smeri, kjer si pojedel nasprotnikovo figuro, to pa odstraniš z igralnega polja
 * Če z lastno figuro prideš do drugega konca igralnega polja, tvoja figura postane dama. Ta se sme premikati in jesti tudi diagonalno nazaj
 
 #### Pogoj za zmago: <h4>
@@ -29,12 +29,12 @@ Vmesnik bo vseboval metode, s katerimi bo risal poteze na platno. Celotni razred
 * izhod(self)
 
 #### Igralci in njihovi razredi: <h4>
-Igra proti računalniku bo vsebovala dva algoritma, enega namerno neizpopolnjenega in lažjega (Minimax) in pa bolj dodelanega (alfa-beta rezanje). Tretja možnost je, da je igralec človek, v tem primeru mu podelimo možnost izvajanja poteze preko uporabniškega vmesnika. Uporabljeni razredi bodo:
+Igra proti računalniku bo vsebovala dva algoritma, enega namerno neizpopolnjenega in lažjega (Random) in pa bolj dodelanega (Minimax). Tretja možnost je, da je igralec človek, v tem primeru mu podelimo možnost izvajanja poteze preko uporabniškega vmesnika. Uporabljeni razredi bodo:
 
 * class Figura, ki ima objekte figure z določeno barvo ter značilnostjo dama.
 * class Racunalnik in class Clovek z metodami: init(self, gui), igraj(self), prekini(self), klik(self, p) in za class Racunalnik še metoda preveri(self).
 * class Minimax
-* class Alfa_beta
+* class Random
 
 #### Razred Igra: <h4>
 Metode znotraj razreda Igra bodo:
