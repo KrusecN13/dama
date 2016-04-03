@@ -51,10 +51,6 @@ class Gui():
                                            command = lambda: self.zacni_igro(Clovek(self),
                                                                              Racunalnik(self, Minimax(3))))
 
-                nova_igra_menu.add_command(label = "Clovek - Racunalnik (Alpha-beta) ",
-                                           command = lambda: self.zacni_igro(Clovek(self),
-                                                                             Racunalnik(self, Alpha_beta(3))))
-
                 
                 nova_igra_menu.add_command(label = "Racunalnik (Random) - Clovek ",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Random(self)),
@@ -63,13 +59,13 @@ class Gui():
                                            command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
                                                                              Clovek(self)))
                 
-                nova_igra_menu.add_command(label = "Racunalnik(Minimax) - Racunalnik(Alpha-beta)",
+                nova_igra_menu.add_command(label = "Racunalnik(Minimax) - Racunalnik(Minimax)",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
-                                                                             Racunalnik(self, Alpha_beta(3))))
+                                                                             Racunalnik(self, Minimax(3))))
 
-                nova_igra_menu.add_command(label = "Racunalnik(Random) - Racunalnik(Alpha-beta)",
-                                           command = lambda: self.zacni_igro(Racunalnik(self, Random(self)),
-                                                                             Racunalnik(self, Alpha_beta(3))))
+                nova_igra_menu.add_command(label = "Racunalnik(Minimax) - Racunalnik(Random)",
+                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
+                                                                             Racunalnik(self, Random(self))))
                 nova_igra_menu.add_command(label = "Racunalnik(Random) - Racunalnik(Minimax)",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Random(self)),
                                                                              Racunalnik(self, Minimax(3))))
@@ -307,6 +303,7 @@ class Gui():
                 # a so stare koordinate, ki jih dobimo s klikom, p pa nove.
 
                 # Najprej povlečemo potezo v igri, nato na kanvasu.
+                ("prsu u naredi potezo, na potezi je:", self.igra.na_potezi)
                 (k,l) = a
                 (m,n) = p
                 id_1 = self.igra.deska[l][k].indeks
@@ -336,7 +333,6 @@ class Gui():
                                         self.kanvas.itemconfig(id_1, fill = "#66B2FF")
                                 elif self.igra.deska[n][m].igralec == CRNI:
                                         self.kanvas.itemconfig(id_1, fill = "#660000")
-                                        
                 elif (a,p) in premakni:
                         # Figuro premaknemo.
                         if n == 7 and nasprotnik(self.igra.na_potezi) == CRNI and self.igra.deska[n][m]:
@@ -346,15 +342,16 @@ class Gui():
                                 self.igra.deska[n][m].dama = True
                                 
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
-                        
                         if self.igra.deska[n][m].dama:
                         # Če je figura postala dama jo drugače obarvamo.
                                 if self.igra.deska[n][m].igralec == BELI:
                                         self.kanvas.itemconfig(id_1, fill = "#66B2FF")
                                 elif self.igra.deska[n][m].igralec == CRNI:
                                         self.kanvas.itemconfig(id_1, fill = "#660000")
-
-                # Določi, ali mora računalnik kaj narediti glede na to, ali je na potezi.
+                                        
+                if self.igra.stanje() != "ni konec":
+                        self.koncaj_igro(nasprotnik(self.igra.na_potezi))
+                #določi, ali mora računalnik kaj narediti glede na to, ali je na potezi
                 if self.igrc != Clovek(self) and self.igrb != Clovek(self):
                         if self.igra.na_potezi == BELI:
                                 self.igrb.igraj()
@@ -367,12 +364,23 @@ class Gui():
                         if self.igra.na_potezi == BELI:
                                 self.igrb.igraj()
 
-                if self.igra.stanje() != NI_KONEC:
-                        self.koncaj_igro(self.igra.na_potezi)
+                
+                
+                
+
+                
+                
+                        
+                        
+                        
+        
+
+        
+            
+            
 
 
-
-#GLAVNI PROGRAM
+ #GLAVNI PROGRAM
 root = Tk()
 root.title("Dama")
 aplikacija = Gui(root)
