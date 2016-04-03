@@ -46,7 +46,7 @@ class Racunalnik():
         # najdena (s pomočjo metode preveri).
         self.vlakno = threading.Thread(
             target=lambda: self.algoritem.najdi_potezo(self.gui.igra.kopija()))
-        
+        print("IGRAJ v racunalniku,", self.vlakno)
         # Vlakno začne delati
         self.vlakno.start()
 
@@ -124,8 +124,6 @@ class Igra():
         
         self.na_potezi = CRNI
         self.zgodovina = [(self.deska, CRNI)]
-
-        self.preverjanje = False 
 
 
     def shrani_potezo(self):
@@ -317,13 +315,14 @@ class Minimax():
         if not self.prekinitev:
             logging.debug("minimax: poteza {0}, vrednost {1}".format(poteza, vrednost))
             self.poteza = poteza
+        print("KONEC NAJDI_POTEZO,", poteza)
 
     ZMAGA = 10000000 #Vrednost zmage.
     NESKONCNO = ZMAGA + 100
     vrednost_st_figur = 500
     vrednost_st_premikov = 10
     vrednost_st_pojej = 5
-    vrednost_st_figur_nasp = -400
+    vrednost_st_figur_nasp = -1
     vrednost_dame = 1000
     
     def vrednost_polja(self):
@@ -353,7 +352,7 @@ class Minimax():
         return (Minimax.vrednost_st_figur * st_figur +
                 Minimax.vrednost_st_premikov * st_premikov +
                 Minimax.vrednost_st_pojej * st_pojej +
-                Minimax.vrednost_st_figur_nasp * st_figur_nasp +
+               # Minimax.vrednost_st_figur_nasp * st_figur_nasp +
                 Minimax.vrednost_dame * dame )
 
 
@@ -387,7 +386,6 @@ class Minimax():
                     sez = self.igra.veljavne_poteze(self.jaz)[0]
                     if sez == []:
                         sez = self.igra.veljavne_poteze(self.jaz)[1]
-        
                     najboljsa_poteza = None
                     vrednost_najboljse = -Minimax.NESKONCNO
                     # Poiščemo potezo z najboljšo vrednostjo.
@@ -402,11 +400,10 @@ class Minimax():
                 else:
                     # Minimiziramo. 
                     sez = self.igra.veljavne_poteze(nasprotnik(self.jaz))[0]
-                    najboljsa_poteza = None
-                    vrednost_najboljse = Minimax.NESKONCNO
                     if sez == []:
                         sez = self.igra.veljavne_poteze(nasprotnik(self.jaz))[1]
-               
+                    najboljsa_poteza = None
+                    vrednost_najboljse = Minimax.NESKONCNO
                     for (p1,p2) in sez:
                      
                         self.igra.naredi_potezo(p1,p2)
@@ -417,7 +414,7 @@ class Minimax():
                             najboljsa_poteza = (p1,p2)
 
                 assert (najboljsa_poteza is not None), "Minimax: izračunana poteza je None"
-                self.preverjanje = False
+                print("KONEC MINIMAXA", najboljsa_poteza, vrednost_najboljse)
                 return (najboljsa_poteza, vrednost_najboljse)
         else:
             assert False, "Minimax: nedefinirano stanje igre "
@@ -428,7 +425,7 @@ class Minimax():
 ##        except AssertionError:
 ##            return self.minimax_test((globina-1), maksimiziramo)
 ##
-        #tudi v prejšnih vrsticah spremeniti na minimax.test
+
 
 #####################
 ## Razred Random:
