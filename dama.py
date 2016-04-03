@@ -46,7 +46,6 @@ class Racunalnik():
         # najdena (s pomočjo metode preveri).
         self.vlakno = threading.Thread(
             target=lambda: self.algoritem.najdi_potezo(self.gui.igra.kopija()))
-        print("IGRAJ v racunalniku,", self.vlakno)
         # Vlakno začne delati
         self.vlakno.start()
 
@@ -444,8 +443,8 @@ class Random():
         self.igra = igra
         self.prekinitev = False
         self.poteza = None
+        # naključno izbere potezo
         (prejsna_pozicija, nova_pozicija) = self.nakljucna_izbira()
-        #vrednost je ubistvu drug del poteze??
         self.igra = None
         if not self.prekinitev:
             logging.debug("Nakljucna izbira: ()".format(prejsna_pozicija, nova_pozicija))
@@ -510,7 +509,6 @@ class Alpha_beta():
         # figure.
         st_figur = 0
         st_figur_naspr = 0
-        #st_figur_nasp = 0
         dame = 0
         dame_naspr = 0
         for i in range(8):
