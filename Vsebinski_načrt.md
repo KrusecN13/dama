@@ -29,12 +29,13 @@ Vmesnik bo vseboval metode, s katerimi bo risal poteze na platno. Celotni razred
 * izhod(self)
 
 #### Igralci in njihovi razredi: <h4>
-Igra proti računalniku bo vsebovala dva algoritma, enega namerno neizpopolnjenega in lažjega (Random) in pa bolj dodelanega (Minimax). Tretja možnost je, da je igralec človek, v tem primeru mu podelimo možnost izvajanja poteze preko uporabniškega vmesnika. Uporabljeni razredi bodo:
+Igra proti računalniku bo vsebovala tri algoritme, enega namerno neizpopolnjenega in lažjega (Random) in pa bolj dodelana (Minimax in Alpha-beta). Tretja možnost je, da je igralec človek, v tem primeru mu podelimo možnost izvajanja poteze preko uporabniškega vmesnika. Uporabljeni razredi bodo:
 
 * class Figura, ki ima objekte figure z določeno barvo ter značilnostjo dama.
 * class Racunalnik in class Clovek z metodami: init(self, gui), igraj(self), prekini(self), klik(self, p) in za class Racunalnik še metoda preveri(self).
 * class Minimax
 * class Random
+* class Alpha_beta
 
 #### Razred Igra: <h4>
 Metode znotraj razreda Igra bodo:
