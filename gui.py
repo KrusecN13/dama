@@ -72,6 +72,7 @@ class Gui():
 
                # Pomoč pri igranju.
                 pomoc_menu.add_command(label = "Navodila igre:", command = lambda: self.navodila())
+
                 # Zapri aplikacijo.
                 zapri_menu.add_command(label = "Izhod", command = lambda: self.izhod(master))
 
@@ -108,8 +109,10 @@ class Gui():
                                                     x,y,
                                                     outline="#ffffff", fill="#deb887")
 
+
                 # Prični igro v načinu človek - človek.                       
                 self.zacni_igro(Clovek(self), Clovek(self))
+                
         def navodila(self):
                 okno = Toplevel(root)
                 label = Label(okno, text = """
@@ -155,6 +158,7 @@ class Gui():
                 self.prekini_igralca()
                 self.kanvas.delete(Gui.TAG_FIGURA)
                 self.kanvas.delete(Gui.TAG_KROG)
+
                 # Ustvarimo novo igro ter postavimo figure.
                 self.igra = Igra()
                 self.postavi_figure()                
@@ -317,16 +321,13 @@ class Gui():
                         # Figuro premaknemo, nasprotnikovo pa zbrišemo.
                         if n == 7 and nasprotnik(self.igra.na_potezi) == CRNI and self.igra.deska[n][m]:
                                 self.igra.deska[n][m].dama = True
-                                print(a)
-                                print(p)
-                                print("figura postane dama, polje:", (m,n))
+                        
                         if n == 0 and nasprotnik(self.igra.na_potezi) == BELI and self.igra.deska[n][m]:
                                 self.igra.deska[n][m].dama = True
-                                print(a)
-                                print(p)
-                                print("figura postane dama, polje:", (m,n))
+                                
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
                         self.zbrisi_figuro(((m+k)//2,(l+n)//2))
+                        
                         if self.igra.deska[n][m].dama:
                         # Če je figura postala dama jo drugače obarvamo.
                                 if self.igra.deska[n][m].igralec == BELI:
@@ -337,15 +338,10 @@ class Gui():
                         # Figuro premaknemo.
                         if n == 7 and nasprotnik(self.igra.na_potezi) == CRNI and self.igra.deska[n][m]:
                                 self.igra.deska[n][m].dama = True
-                                print(a)
-                                print(p)
-                                print("figura postane dama, polje:", (m,n))
                         
                         if n == 0 and nasprotnik(self.igra.na_potezi) == BELI and self.igra.deska[n][m]:
                                 self.igra.deska[n][m].dama = True
-                                print(a)
-                                print(p)
-                                print("figura postane dama, polje:", (m,n))
+                                
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
                         if self.igra.deska[n][m].dama:
                         # Če je figura postala dama jo drugače obarvamo.
@@ -353,14 +349,6 @@ class Gui():
                                         self.kanvas.itemconfig(id_1, fill = "#66B2FF")
                                 elif self.igra.deska[n][m].igralec == CRNI:
                                         self.kanvas.itemconfig(id_1, fill = "#660000")
-                        
-##                if self.igra.deska[n][m].dama:
-##                        # Če je figura postala dama jo drugače obarvamo.
-##                        if self.igra.deska[n][m].igralec == BELI:
-##                                self.kanvas.itemconfig(id_1, fill = "#66B2FF")
-##                        elif self.igra.deska[n][m].igralec == CRNI:
-##                                self.kanvas.itemconfig(id_1, fill = "#660000")
-##                print(self.igra.stanje())
                                         
                 if self.igra.stanje() != "ni konec":
                         self.koncaj_igro(nasprotnik(self.igra.na_potezi))

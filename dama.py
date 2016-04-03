@@ -303,7 +303,7 @@ class Minimax():
         self.prekinitev = True
         
     def najdi_potezo(self,igra):
-        # Najde najbolšo potezo v trenutnem stanju igre.
+        # Najde najboljšo potezo v trenutnem stanju igre.
         self.igra = igra
         self.prekinitev = False
         self.jaz = self.igra.na_potezi
@@ -317,27 +317,29 @@ class Minimax():
             self.poteza = poteza
         print("KONEC NAJDI_POTEZO,", poteza)
 
-    ZMAGA = 10000000 #Vrednost zmage.
+    ZMAGA = 100000 #Vrednost zmage.
     NESKONCNO = ZMAGA + 100
-    vrednost_st_figur = 500
-    vrednost_st_premikov = 10
-    vrednost_st_pojej = 5
-    vrednost_st_figur_nasp = -1
-    vrednost_dame = 1000
+    vrednost_dame = ZMAGA//10
+    vrednost_st_figur = ZMAGA//100
+    vrednost_st_premikov = ZMAGA//1000
+    vrednost_st_pojej = ZMAGA//100
+    
+    
     
     def vrednost_polja(self):
         # Oceni vrednost polja, glede na število figur, ki jih še imamo,
         # glede na število možnih premikov in možnih odvzemov nasprotnikove
         # figure.
         st_figur = 0
-        st_figur_nasp = 0
+        #st_figur_nasp = 0
         dame = 0
         for i in range(8):
             for j in range(8):
                 if self.igra.deska[j][i] == Figura(self.igra.na_potezi):
                     st_figur += 1
-                if self.igra.deska[j][i] == Figura(nasprotnik(self.igra.na_potezi)):
-                    st_figur_nasp += 1
+                else:
+##                if self.igra.deska[j][i] == Figura(nasprotnik(self.igra.na_potezi)):
+                    st_figur -= 1
                 if self.igra.deska[j][i]:
                     if self.igra.deska[j][i].dama:
                         if self.igra.deska[j][i] == Figura(self.igra.na_potezi):
@@ -413,9 +415,9 @@ class Minimax():
                             vrednost_najboljse = vrednost
                             najboljsa_poteza = (p1,p2)
 
-                assert (najboljsa_poteza is not None), "Minimax: izračunana poteza je None"
-                print("KONEC MINIMAXA", najboljsa_poteza, vrednost_najboljse)
                 return (najboljsa_poteza, vrednost_najboljse)
+            assert (najboljsa_poteza is not None), "Minimax: izračunana poteza je None"
+            
         else:
             assert False, "Minimax: nedefinirano stanje igre "
 
@@ -476,12 +478,164 @@ class Random():
         elif len(pojej) > 0:
             return choice(pojej)
         
-            
+
+
+#############################
+## Razred Alpha_beta:
+#############################
+
+class Alpha_Beta():
+
+    def __init__(self, globina):
+        self.globina = globina
+        self.prekinitev = False
+        self.igra = None
+        self.jaz = None
+        self.poteza = None
         
 
+    def prekini(self):
+        self.prekinitev = True
+
+    # Vrednost igre
+    ZMAGA = 100000 #Vrednost zmage.
+    NESKONCNO = ZMAGA + 100
+    vrednost_dame = ZMAGA//10
+    vrednost_st_figur = ZMAGA//100
+    vrednost_st_premikov = ZMAGA//1000
+    vrednost_st_pojej = ZMAGA//100
+    
+    
+    
+    def vrednost_polja(self):
+        # Oceni vrednost polja, glede na število figur, ki jih še imamo,
+        # glede na število možnih premikov in možnih odvzemov nasprotnikove
+        # figure.
+        st_figur = 0
+        #st_figur_nasp = 0
+        dame = 0
+        for i in range(8):
+            for j in range(8):
+                if self.igra.deska[j][i] == Figura(self.igra.na_potezi):
+                    st_figur += 1
+                else:
+##                if self.igra.deska[j][i] == Figura(nasprotnik(self.igra.na_potezi)):
+                    st_figur -= 1
+                if self.igra.deska[j][i]:
+                    if self.igra.deska[j][i].dama:
+                        if self.igra.deska[j][i] == Figura(self.igra.na_potezi):
+                            dame +=1
+                        else:
+                            dame -=1
+                    
+        (pojej, premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
+        st_pojej = len(pojej)
+        st_premikov = len(premakni)
+
+        return (Minimax.vrednost_st_figur * st_figur +
+                Minimax.vrednost_st_premikov * st_premikov +
+                Minimax.vrednost_st_pojej * st_pojej +
+               # Minimax.vrednost_st_figur_nasp * st_figur_nasp +
+                Minimax.vrednost_dame * dame )
+
+    def najdi_potezo(self,igra):
+        # Najde najboljšo potezo v trenutnem stanju igre.
+        self.igra = igra
+        self.prekinitev = False
+        self.jaz = self.igra.na_potezi
+        self.poteza = None
+        # Algoritem minimax nam najde potezo.
+        (poteza, vrednost) = self.alphabeta(self.globina, True, -Alpha_beta.NESKONCNO, Alpha_beta.NESKONCNO)
+        self.jaz = None
+        self.igra = None
+        if not self.prekinitev:
+            logging.debug("Alpha-beta: poteza {0}, vrednost {1}".format(poteza, vrednost))
+            self.poteza = poteza   
+
+
+    def alphabeta(self, globina, maksimiziramo, alpha, beta):
+        # Glavna metoda alpha-beta
+        if self.prekinitev:
+            logging.debug("Minimax prekinja, globina = {0}".format(globina))
+            return (None, 0)
+        zmagovalec = self.igra.stanje()
+        if zmagovalec in (CRNI,BELI):
+            # Če je igre konec, vrnemo njeno vrednost.
+            if zmagovalec == self.jaz:
+                return (None, Minimax.ZMAGA)
+            elif zmagovalec == nasprotnik(self.jaz):
+                return (None, -Minimax.ZMAGA)
+            
+        elif zmagovalec == NI_KONEC:
+            self.preverjanje = True
+            # Če igre še ni konec ločimo primera glede na globino.
+            if globina == 0:
+                return (None, self.vrednost_polja())
+            else:
+                
+                if maksimiziramo:
+                    # Maksimiziramo
+                    a = alpha
+                    b = beta
+                    najboljsa_poteza = None
+                    vrednost_najboljse = -Alpha_beta.NESKONCNO
+                    
+                    sez = self.igra.veljavne_poteze(self.jaz)[0]
+                    if sez == []:
+                        sez = self.igra.veljavne_poteze(self.jaz)[1]
+                    
+                    # Poiščemo potezo z najboljšo vrednostjo.
+                    for (p1,p2) in sez:
+                        self.igra.naredi_potezo(p1,p2)
+                        vrednost = self.alphabeta(globina-1, not maksimiziramo, alpha, beta)[1]
+                        self.igra.razveljavi()
+                        if vrednost > vrednost_najboljse:
+                            vrednost_najboljse = vrednost
+                            najboljsa_poteza = (p1,p2)
+                        if vrednost > a:
+                            a = vrednost
+                        if b <= a:
+                            break
+                    
+                    return (najboljsa_poteza, vrednost_najboljse)
+
+                else:
+                    # Minimiziramo
+                    a = alpha
+                    b = beta
+                    najboljsa_poteza = None
+                    vrednost_najboljse = Alpha_Beta.NESKONCNO
+                    sez = self.igra.veljavne_poteze(nasprotnik(self.jaz))[0]
+                    if sez == []:
+                        sez = self.igra.veljavne_poteze(nasprotnik(self.jaz))[1]
+                    for (p1,p2) in sez:
+                        self.igra.naredi_potezo(p1,p2)
+                        vrednost = self.alphabeta(globina-1, not maksimiziramo, alpha, beta)[1]
+                        self.igra.razveljavi()
+                        if vrednost < vrednost_najboljse:
+                            vrednost_najboljse = vrednost
+                            najboljsa_poteza = (p1,p2)
+                        if vrednost < b:
+                            b = vrednost
+                        if b < a:
+                            break
+                    return (najboljsa_poteza, vrednost_najboljse)
+
+                assert (najboljsa_poteza is not None), "Alpha-beta: izračunana poteza je None"
+                
+        else:
+            assert False, "Alpha-beta: nedefinirano stanje igre "
 
 
 
+
+
+
+
+
+            
+                
+                
 
 
 
