@@ -125,6 +125,8 @@ class Igra():
         self.na_potezi = CRNI
         self.zgodovina = [(self.deska, CRNI)]
 
+        self.preverjanje = False 
+
 
     def shrani_potezo(self):
         # Seznamu zgodovina pripne par (trenutna pozicija na deski, igralec na potezi).
@@ -248,13 +250,8 @@ class Igra():
                 self.shrani_potezo()
                 self.deska[r2][r1] = self.deska[p2][p1]
                 self.deska[p2][p1] = None
+
                 zmagovalec = self.stanje()
-                
-                if r2 == 0 or r2 == 7:
-                    # Preverimo, če figura postane dama.
-                    self.deska[r2][r1].dama = True
-                        
-                        
                 if zmagovalec == NI_KONEC:
                     # Če igre še ni konec, je na vrsti nasprotnik.
                     self.na_potezi = nasprotnik(self.na_potezi)
@@ -271,10 +268,9 @@ class Igra():
                 self.shrani_potezo()
                 self.deska[r2][r1] = self.deska[p2][p1]
                 self.deska[p2][p1] = None
-                zmagovalec = self.stanje()
                 
-                if r2 == 0 or r2 == 7:
-                    self.deska[r2][r1].dama = True
+                zmagovalec = self.stanje()
+                    
                     
                 if zmagovalec == NI_KONEC:
                     self.na_potezi = nasprotnik(self.na_potezi)
@@ -328,6 +324,7 @@ class Minimax():
     vrednost_st_premikov = 10
     vrednost_st_pojej = 5
     vrednost_st_figur_nasp = -400
+    vrednost_dame = 1000
     
     def vrednost_polja(self):
         # Oceni vrednost polja, glede na število figur, ki jih še imamo,
@@ -335,18 +332,29 @@ class Minimax():
         # figure.
         st_figur = 0
         st_figur_nasp = 0
+        dame = 0
         for i in range(8):
             for j in range(8):
                 if self.igra.deska[j][i] == Figura(self.igra.na_potezi):
                     st_figur += 1
                 if self.igra.deska[j][i] == Figura(nasprotnik(self.igra.na_potezi)):
                     st_figur_nasp += 1
+                if self.igra.deska[j][i]:
+                    if self.igra.deska[j][i].dama:
+                        if self.igra.deska[j][i] == Figura(self.igra.na_potezi):
+                            dame +=1
+                        else:
+                            dame -=1
+                    
         (pojej, premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
         st_pojej = len(pojej)
         st_premikov = len(premakni)
 
-        return (Minimax.vrednost_st_figur * st_figur + Minimax.vrednost_st_premikov * st_premikov +
-                Minimax.vrednost_st_pojej * st_pojej + st_figur_nasp * Minimax.vrednost_st_figur_nasp)
+        return (Minimax.vrednost_st_figur * st_figur +
+                Minimax.vrednost_st_premikov * st_premikov +
+                Minimax.vrednost_st_pojej * st_pojej +
+                Minimax.vrednost_st_figur_nasp * st_figur_nasp +
+                Minimax.vrednost_dame * dame )
 
 
         
@@ -368,6 +376,7 @@ class Minimax():
                 return (None, -Minimax.ZMAGA)
             
         elif zmagovalec == NI_KONEC:
+            self.preverjanje = True
             # Če igre še ni konec ločimo primera glede na globino.
             if globina == 0:
                 return (None, self.vrednost_polja())
@@ -408,6 +417,7 @@ class Minimax():
                             najboljsa_poteza = (p1,p2)
 
                 assert (najboljsa_poteza is not None), "Minimax: izračunana poteza je None"
+                self.preverjanje = False
                 return (najboljsa_poteza, vrednost_najboljse)
         else:
             assert False, "Minimax: nedefinirano stanje igre "

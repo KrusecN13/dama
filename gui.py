@@ -28,6 +28,7 @@ class Gui():
                 menu = Menu(master)
                 master.config(menu=menu)
                 nova_igra_menu = Menu(menu)
+                pomoc_menu = Menu(menu)
                 zapri_menu = Menu(menu)
 
                 # Ozadje
@@ -35,6 +36,7 @@ class Gui():
 
                 # Nariši orodno vrstico v oknu.
                 menu.add_cascade(label = "Nova igra", menu = nova_igra_menu)
+                menu.add_cascade(label = "Pomoč", menu = pomoc_menu)
                 menu.add_cascade(label = "Izhod", menu = zapri_menu)
 
                 
@@ -68,6 +70,8 @@ class Gui():
                                            command = lambda: self.zacni_igro(Racunalnik(self, Random(self)),
                                                                              Racunalnik(self, Minimax(3))))
 
+               # Pomoč pri igranju.
+                pomoc_menu.add_command(label = "Navodila igre:", command = lambda: self.navodila())
                 # Zapri aplikacijo.
                 zapri_menu.add_command(label = "Izhod", command = lambda: self.izhod(master))
 
@@ -106,6 +110,17 @@ class Gui():
 
                 # Prični igro v načinu človek - človek.                       
                 self.zacni_igro(Clovek(self), Clovek(self))
+        def navodila(self):
+                okno = Toplevel(root)
+                label = Label(okno, text = """
+                Pravila igre: Začne igralec s črnimi figurami. Igralec svoje figure premika diagonalno naprej za eno polje.
+                Če je na diagonalnem polju naprej nasprotnikova figura in diagonalno za njo prazno polje, lahko figura
+                preskoči nasprotnikovo figuro, ki pa se odstrani iz igralnega polja.
+
+                Cilj igre: Zmagovalec je igralec, ki zapre nasprotnika, da se ne more več premakniti oziroma
+                odvzame še zadnjo figuro nasprotnika.""")
+                label.pack()
+                
 
         def postavi_figure(self):
                 # Metoda, ki postavi figure na self.kanvas in na desko (v igri)
@@ -254,7 +269,6 @@ class Gui():
                                 self.opravljen_klik1 = True
 
                 else:
-
                         sez_vseh_iz_pozicije = self.prenesene_poteze
                         # Imamo možne poteze.
                         assert (len(sez_vseh_iz_pozicije) > 0), "druga faza klika"
@@ -285,19 +299,32 @@ class Gui():
                 # a so stare koordinate, ki jih dobimo s klikom, p pa nove.
 
                 # Najprej povlečemo potezo v igri, nato na kanvasu.
-
+                ("prsu u naredi potezo, na potezi je:", self.igra.na_potezi)
                 (k,l) = a
                 (m,n) = p
+                print("prvic",a,p)
                 id_1 = self.igra.deska[l][k].indeks
                 igralec = self.igra.na_potezi
                 (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
+
                 r = self.igra.naredi_potezo(a,p)
+
                 if igralec == CRNI:
                         self.napis.set("Na potezi je BELI")
                 elif igralec == BELI:
                         self.napis.set("Na potezi je CRNI")
                 if (a,p) in pojej:
                         # Figuro premaknemo, nasprotnikovo pa zbrišemo.
+                        if n == 7 and nasprotnik(self.igra.na_potezi) == CRNI and self.igra.deska[n][m]:
+                                self.igra.deska[n][m].dama = True
+                                print(a)
+                                print(p)
+                                print("figura postane dama, polje:", (m,n))
+                        if n == 0 and nasprotnik(self.igra.na_potezi) == BELI and self.igra.deska[n][m]:
+                                self.igra.deska[n][m].dama = True
+                                print(a)
+                                print(p)
+                                print("figura postane dama, polje:", (m,n))
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
                         self.zbrisi_figuro(((m+k)//2,(l+n)//2))
                         if self.igra.deska[n][m].dama:
@@ -308,6 +335,17 @@ class Gui():
                                         self.kanvas.itemconfig(id_1, fill = "#660000")
                 elif (a,p) in premakni:
                         # Figuro premaknemo.
+                        if n == 7 and nasprotnik(self.igra.na_potezi) == CRNI and self.igra.deska[n][m]:
+                                self.igra.deska[n][m].dama = True
+                                print(a)
+                                print(p)
+                                print("figura postane dama, polje:", (m,n))
+                        
+                        if n == 0 and nasprotnik(self.igra.na_potezi) == BELI and self.igra.deska[n][m]:
+                                self.igra.deska[n][m].dama = True
+                                print(a)
+                                print(p)
+                                print("figura postane dama, polje:", (m,n))
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
                         if self.igra.deska[n][m].dama:
                         # Če je figura postala dama jo drugače obarvamo.
@@ -338,14 +376,7 @@ class Gui():
                 elif self.igrb != Clovek(self):
                         if self.igra.na_potezi == BELI:
                                 self.igrb.igraj()
-                        
-                
 
-                
-                
-                                                    
-                        
-                        
                 
                 
                 
