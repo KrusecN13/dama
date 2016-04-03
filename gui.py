@@ -14,7 +14,7 @@ class Gui():
         # Oznaka za označitev možnih potez iz mesta.
         TAG_KROG = 'krog'
         
-        def __init__(self, master=None):
+        def __init__(self, master = 0):
                 self.prenesene_poteze = [] # Veljavne poteze za po prvem kliku
                 self.opravljen_klik1 = False # Prvi klik je opravljen.
                 
@@ -23,14 +23,15 @@ class Gui():
                 self.igrc = None # Objekt, ki igra s crnimi figurami
                 self.igrb = None # Objekt, ki igra z belimi figurami
 
-                # Ozadje
-                master.configure(background = '#0000cd')
 
                 # Ustvarimo meni.              
                 menu = Menu(master)
                 master.config(menu=menu)
                 nova_igra_menu = Menu(menu)
                 zapri_menu = Menu(menu)
+
+                # Ozadje
+                master.configure(background = '#0000cd')
 
                 # Nariši orodno vrstico v oknu.
                 menu.add_cascade(label = "Nova igra", menu = nova_igra_menu)
@@ -68,7 +69,7 @@ class Gui():
                                                                              Racunalnik(self, Minimax(3))))
 
                 # Zapri aplikacijo.
-                zapri_menu.add_command(label = "Izhod", command = lambda: self.izhod())
+                zapri_menu.add_command(label = "Izhod", command = lambda: self.izhod(master))
 
                 # Igralno polje.
                 self.kanvas = Canvas(master, width=800, height=800)
@@ -160,7 +161,7 @@ class Gui():
                 elif zmagovalec == BELI:
                         self.napis.set("Zmagal je BELI!")
 
-        def izhod(self):
+        def izhod(self, master):
                 # Zapre okno in prekine igralce.                 
                 self.prekini_igralca()
                 master.destroy()
@@ -299,17 +300,30 @@ class Gui():
                         # Figuro premaknemo, nasprotnikovo pa zbrišemo.
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
                         self.zbrisi_figuro(((m+k)//2,(l+n)//2))
+                        if self.igra.deska[n][m].dama:
+                        # Če je figura postala dama jo drugače obarvamo.
+                                if self.igra.deska[n][m].igralec == BELI:
+                                        self.kanvas.itemconfig(id_1, fill = "#66B2FF")
+                                elif self.igra.deska[n][m].igralec == CRNI:
+                                        self.kanvas.itemconfig(id_1, fill = "#660000")
                 elif (a,p) in premakni:
                         # Figuro premaknemo.
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
-                        
-                if self.igra.deska[n][m].dama:
+                        if self.igra.deska[n][m].dama:
                         # Če je figura postala dama jo drugače obarvamo.
-                        if self.igra.deska[n][m].igralec == BELI:
-                                self.kanvas.itemconfig(id_1, fill = "#66B2FF")
-                        elif self.igra.deska[n][m].igralec == CRNI:
-                                self.kanvas.itemconfig(id_1, fill = "#660000")
-                print(self.igra.stanje())
+                                if self.igra.deska[n][m].igralec == BELI:
+                                        self.kanvas.itemconfig(id_1, fill = "#66B2FF")
+                                elif self.igra.deska[n][m].igralec == CRNI:
+                                        self.kanvas.itemconfig(id_1, fill = "#660000")
+                        
+##                if self.igra.deska[n][m].dama:
+##                        # Če je figura postala dama jo drugače obarvamo.
+##                        if self.igra.deska[n][m].igralec == BELI:
+##                                self.kanvas.itemconfig(id_1, fill = "#66B2FF")
+##                        elif self.igra.deska[n][m].igralec == CRNI:
+##                                self.kanvas.itemconfig(id_1, fill = "#660000")
+##                print(self.igra.stanje())
+                                        
                 if self.igra.stanje() != "ni konec":
                         self.koncaj_igro(nasprotnik(self.igra.na_potezi))
                 #določi, ali mora računalnik kaj narediti glede na to, ali je na potezi

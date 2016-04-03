@@ -219,14 +219,12 @@ class Igra():
                                     premakni.append(((i,j),(i+1,j+1*smer)))
         return (pojej, premakni)
                     
-                    
-  
     
     def stanje(self):
         # Ugotovi če imamo zmagovalca in ga vrne, oz. sporoči da igre še ni konec.
         (pojej, premakni) = self.veljavne_poteze(self.na_potezi)
         if pojej == [] and premakni ==[]:
-            return self.na_potezi
+            return nasprotnik(self.na_potezi)
         else:
             return (NI_KONEC)
         
@@ -347,7 +345,8 @@ class Minimax():
         st_pojej = len(pojej)
         st_premikov = len(premakni)
 
-        return (Minimax.vrednost_st_figur * st_figur + Minimax.vrednost_st_premikov * st_premikov + Minimax.vrednost_st_pojej * st_pojej + st_figur_nasp * Minimax.vrednost_st_figur_nasp)
+        return (Minimax.vrednost_st_figur * st_figur + Minimax.vrednost_st_premikov * st_premikov +
+                Minimax.vrednost_st_pojej * st_pojej + st_figur_nasp * Minimax.vrednost_st_figur_nasp)
 
 
         
