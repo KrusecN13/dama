@@ -61,10 +61,10 @@ class Gui():
                 
                 nova_igra_menu.add_command(label = "Racunalnik(Minimax) - Racunalnik(Minimax)",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
-                                                                             Racunalnik(self, Minimax(3))))
+                                                                             Racunalnik(self, Alpha_beta(3))))
 
                 nova_igra_menu.add_command(label = "Racunalnik(Minimax) - Racunalnik(Random)",
-                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
+                                           command = lambda: self.zacni_igro(Racunalnik(self, Alpha_beta(3)),
                                                                              Racunalnik(self, Random(self))))
                 nova_igra_menu.add_command(label = "Racunalnik(Random) - Racunalnik(Minimax)",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Random(self)),

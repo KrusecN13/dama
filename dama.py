@@ -315,15 +315,17 @@ class Minimax():
         if not self.prekinitev:
             logging.debug("minimax: poteza {0}, vrednost {1}".format(poteza, vrednost))
             self.poteza = poteza
-        print("KONEC NAJDI_POTEZO,", poteza)
+        
+
+
 
     ZMAGA = 100000 #Vrednost zmage.
     NESKONCNO = ZMAGA + 100
     vrednost_dame = ZMAGA//10
-    vrednost_st_figur = ZMAGA//100
-    vrednost_st_premikov = ZMAGA//1000
-    vrednost_st_pojej = ZMAGA//100
-    
+    vrednost_st_figur = ZMAGA//100  
+    vrednost_st_premikov = ZMAGA//1500
+    vrednost_st_pojej = ZMAGA//1000
+
     
     
     def vrednost_polja(self):
@@ -331,35 +333,36 @@ class Minimax():
         # glede na število možnih premikov in možnih odvzemov nasprotnikove
         # figure.
         st_figur = 0
+        st_figur_naspr = 0
         #st_figur_nasp = 0
         dame = 0
+        dame_naspr = 0
         for i in range(8):
             for j in range(8):
                 if self.igra.deska[j][i] == Figura(self.igra.na_potezi):
                     st_figur += 1
-                else:
-##                if self.igra.deska[j][i] == Figura(nasprotnik(self.igra.na_potezi)):
-                    st_figur -= 1
-                if self.igra.deska[j][i]:
                     if self.igra.deska[j][i].dama:
-                        if self.igra.deska[j][i] == Figura(self.igra.na_potezi):
-                            dame +=1
-                        else:
-                            dame -=1
+                        dame +=1
+                elif self.igra.deska[j][i] == Figura(nasprotnik(self.igra.na_potezi)):
+                    st_figur += 1
+                    if self.igra.deska[j][i].dama:
+                        dame_naspr += 1
                     
-        (pojej, premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
-        st_pojej = len(pojej)
-        st_premikov = len(premakni)
+        (pojej1, premakni1) = self.igra.veljavne_poteze(self.igra.na_potezi)
+        st_pojej1 = len(pojej1)
+        st_premikov1 = len(premakni1)
 
-        return (Minimax.vrednost_st_figur * st_figur +
-                Minimax.vrednost_st_premikov * st_premikov +
-                Minimax.vrednost_st_pojej * st_pojej +
-               # Minimax.vrednost_st_figur_nasp * st_figur_nasp +
-                Minimax.vrednost_dame * dame )
+        (pojej2, premakni2) = self.igra.veljavne_poteze(nasprotnik(self.igra.na_potezi))
+        st_pojej2 = len(pojej2)
+        st_premikov2 = len(premakni2)
 
-
+        vrednost = (Minimax.vrednost_st_figur * st_figur + Minimax.vrednost_st_premikov * st_premikov1 + Minimax.vrednost_st_pojej * st_pojej1 + Minimax.vrednost_dame * dame - Minimax.vrednost_st_figur * st_figur_naspr - Minimax.vrednost_st_premikov * st_premikov2 - Minimax.vrednost_st_pojej * st_pojej2 - Minimax.vrednost_dame * dame_naspr)
         
+        return vrednost
 
+
+
+                
     
     def minimax(self, globina, maksimiziramo):
          
@@ -382,7 +385,8 @@ class Minimax():
             if globina == 0:
                 return (None, self.vrednost_polja())
             else:
-                
+
+
                 if maksimiziramo:
                     # Maksimiziramo.
                     sez = self.igra.veljavne_poteze(self.jaz)[0]
@@ -400,7 +404,7 @@ class Minimax():
                             vrednost_najboljse = vrednost
                             najboljsa_poteza = (p1,p2)
                 else:
-                    # Minimiziramo. 
+                    # Minimiziramo.
                     sez = self.igra.veljavne_poteze(nasprotnik(self.jaz))[0]
                     if sez == []:
                         sez = self.igra.veljavne_poteze(nasprotnik(self.jaz))[1]
@@ -420,13 +424,6 @@ class Minimax():
             
         else:
             assert False, "Minimax: nedefinirano stanje igre "
-
-##    def minimax_test(self, globina, maksimiziramo):
-##        try:
-##            return self.minimax(globina,maksimiziramo)
-##        except AssertionError:
-##            return self.minimax_test((globina-1), maksimiziramo)
-##
 
 
 #####################
@@ -484,7 +481,7 @@ class Random():
 ## Razred Alpha_beta:
 #############################
 
-class Alpha_Beta():
+class Alpha_beta():
 
     def __init__(self, globina):
         self.globina = globina
@@ -501,10 +498,10 @@ class Alpha_Beta():
     ZMAGA = 100000 #Vrednost zmage.
     NESKONCNO = ZMAGA + 100
     vrednost_dame = ZMAGA//10
-    vrednost_st_figur = ZMAGA//100
-    vrednost_st_premikov = ZMAGA//1000
-    vrednost_st_pojej = ZMAGA//100
-    
+    vrednost_st_figur = ZMAGA//100  
+    vrednost_st_premikov = ZMAGA//1500
+    vrednost_st_pojej = ZMAGA//1000
+
     
     
     def vrednost_polja(self):
@@ -512,31 +509,34 @@ class Alpha_Beta():
         # glede na število možnih premikov in možnih odvzemov nasprotnikove
         # figure.
         st_figur = 0
+        st_figur_naspr = 0
         #st_figur_nasp = 0
         dame = 0
+        dame_naspr = 0
         for i in range(8):
             for j in range(8):
                 if self.igra.deska[j][i] == Figura(self.igra.na_potezi):
                     st_figur += 1
-                else:
-##                if self.igra.deska[j][i] == Figura(nasprotnik(self.igra.na_potezi)):
-                    st_figur -= 1
-                if self.igra.deska[j][i]:
                     if self.igra.deska[j][i].dama:
-                        if self.igra.deska[j][i] == Figura(self.igra.na_potezi):
-                            dame +=1
-                        else:
-                            dame -=1
+                        dame +=1
+                elif self.igra.deska[j][i] == Figura(nasprotnik(self.igra.na_potezi)):
+                    st_figur += 1
+                    if self.igra.deska[j][i].dama:
+                        dame_naspr += 1
                     
-        (pojej, premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
-        st_pojej = len(pojej)
-        st_premikov = len(premakni)
+        (pojej1, premakni1) = self.igra.veljavne_poteze(self.igra.na_potezi)
+        st_pojej1 = len(pojej1)
+        st_premikov1 = len(premakni1)
 
-        return (Minimax.vrednost_st_figur * st_figur +
-                Minimax.vrednost_st_premikov * st_premikov +
-                Minimax.vrednost_st_pojej * st_pojej +
-               # Minimax.vrednost_st_figur_nasp * st_figur_nasp +
-                Minimax.vrednost_dame * dame )
+        (pojej2, premakni2) = self.igra.veljavne_poteze(nasprotnik(self.igra.na_potezi))
+        st_pojej2 = len(pojej2)
+        st_premikov2 = len(premakni2)
+
+        vrednost = (Minimax.vrednost_st_figur * st_figur + Minimax.vrednost_st_premikov * st_premikov1 + Minimax.vrednost_st_pojej * st_pojej1 + Minimax.vrednost_dame * dame - Minimax.vrednost_st_figur * st_figur_naspr - Minimax.vrednost_st_premikov * st_premikov2 - Minimax.vrednost_st_pojej * st_pojej2 - Minimax.vrednost_dame * dame_naspr)
+        
+        return vrednost
+
+
 
     def najdi_potezo(self,igra):
         # Najde najboljšo potezo v trenutnem stanju igre.
@@ -544,8 +544,8 @@ class Alpha_Beta():
         self.prekinitev = False
         self.jaz = self.igra.na_potezi
         self.poteza = None
-        # Algoritem minimax nam najde potezo.
-        (poteza, vrednost) = self.alphabeta(self.globina, True, -Alpha_beta.NESKONCNO, Alpha_beta.NESKONCNO)
+        # Algoritem alpha-beta nam najde potezo.
+        (poteza, vrednost) = self.alpha_beta(self.globina, True, -Alpha_beta.NESKONCNO, Alpha_beta.NESKONCNO)
         self.jaz = None
         self.igra = None
         if not self.prekinitev:
@@ -553,18 +553,18 @@ class Alpha_Beta():
             self.poteza = poteza   
 
 
-    def alphabeta(self, globina, maksimiziramo, alpha, beta):
+    def alpha_beta(self, globina, maksimiziramo, alpha, beta):
         # Glavna metoda alpha-beta
         if self.prekinitev:
-            logging.debug("Minimax prekinja, globina = {0}".format(globina))
+            logging.debug("Alpha-beta prekinja, globina = {0}".format(globina))
             return (None, 0)
         zmagovalec = self.igra.stanje()
         if zmagovalec in (CRNI,BELI):
             # Če je igre konec, vrnemo njeno vrednost.
             if zmagovalec == self.jaz:
-                return (None, Minimax.ZMAGA)
+                return (None, Alpha_beta.ZMAGA)
             elif zmagovalec == nasprotnik(self.jaz):
-                return (None, -Minimax.ZMAGA)
+                return (None, -Alpha_beta.ZMAGA)
             
         elif zmagovalec == NI_KONEC:
             self.preverjanje = True
@@ -587,7 +587,7 @@ class Alpha_Beta():
                     # Poiščemo potezo z najboljšo vrednostjo.
                     for (p1,p2) in sez:
                         self.igra.naredi_potezo(p1,p2)
-                        vrednost = self.alphabeta(globina-1, not maksimiziramo, alpha, beta)[1]
+                        vrednost = self.alpha_beta(globina-1, not maksimiziramo, alpha, beta)[1]
                         self.igra.razveljavi()
                         if vrednost > vrednost_najboljse:
                             vrednost_najboljse = vrednost
@@ -604,13 +604,13 @@ class Alpha_Beta():
                     a = alpha
                     b = beta
                     najboljsa_poteza = None
-                    vrednost_najboljse = Alpha_Beta.NESKONCNO
+                    vrednost_najboljse = Alpha_beta.NESKONCNO
                     sez = self.igra.veljavne_poteze(nasprotnik(self.jaz))[0]
                     if sez == []:
                         sez = self.igra.veljavne_poteze(nasprotnik(self.jaz))[1]
                     for (p1,p2) in sez:
                         self.igra.naredi_potezo(p1,p2)
-                        vrednost = self.alphabeta(globina-1, not maksimiziramo, alpha, beta)[1]
+                        vrednost = self.alpha_beta(globina-1, not maksimiziramo, alpha, beta)[1]
                         self.igra.razveljavi()
                         if vrednost < vrednost_najboljse:
                             vrednost_najboljse = vrednost
