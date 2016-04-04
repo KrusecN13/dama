@@ -5,7 +5,7 @@ from dama import *
 ## Razred Gui (uporabniški vmesnik) predstavlja našo aplikacijo:
 #################################################################
 
-GLOBINA = 4
+GLOBINA = 3
 
 class Gui():
         # Oznake za grafične elemente v self.kanvas
@@ -122,11 +122,15 @@ class Gui():
         def navodila(self):
                 okno = Toplevel(root)
                 label = Label(okno, text = """
-                Pravila igre: Začne igralec s črnimi figurami. Igralec svoje figure premika diagonalno naprej za eno polje.
+                Pravila igre:
+                Začne igralec s črnimi figurami. Igralec svoje figure premika diagonalno naprej za eno polje.
                 Če je na diagonalnem polju naprej nasprotnikova figura in diagonalno za njo prazno polje, lahko figura
                 preskoči nasprotnikovo figuro, ki pa se odstrani iz igralnega polja.
+                Če igralec spravi katero od figur do drugega konca igralnega polja, njegova figura postane dama in se obarva.
+                
 
-                Cilj igre: Zmagovalec je igralec, ki zapre nasprotnika, da se ne more več premakniti oziroma
+                Cilj igre:
+                Zmagovalec je igralec, ki zapre nasprotnika, da se ne more več premakniti oziroma
                 odvzame še zadnjo figuro nasprotnika.""")
                 label.pack()
                 
@@ -355,7 +359,7 @@ class Gui():
                                 self.igrb.igraj()
 
                 if self.igra.stanje() != NI_KONEC:
-                        self.koncaj_igro(self.igra.na_potezi)
+                        self.koncaj_igro(nasprotnik(self.igra.na_potezi))
 
 
 

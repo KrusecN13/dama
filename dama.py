@@ -195,6 +195,7 @@ class Igra():
                                  if self.deska[j+1][i+1]:
                                     if self.deska[j+1][i+1].igralec == nasprotnik(self.na_potezi):
                                          pojej.append(((i,j), (i+2, j+2)))
+                                         
                             if 0 <= (i-1) <= 7 and 0 <= (j+1) <= 7 and self.deska[j+1][i-1] == None:
                                   premakni.append(((i,j),(i-1,j+1)))
                             if 0 <= (i+1) <= 7 and 0 <= (j+1) <= 7 and self.deska[j+1][i+1] == None:
@@ -210,6 +211,7 @@ class Igra():
                                  if self.deska[j-1][i+1]:
                                     if self.deska[j-1][i+1].igralec == nasprotnik(self.na_potezi):
                                          pojej.append(((i,j), (i+2, j-2)))
+                                         
                             if 0 <= (i-1) <= 7 and 0 <= (j-1) <= 7 and self.deska[j-1][i-1] == None:
                                   premakni.append(((i,j),(i-1,j-1)))
                             if 0 <= (i+1) <= 7 and 0 <= (j-1) <= 7 and self.deska[j-1][i+1] == None:
@@ -319,15 +321,13 @@ class Minimax():
     vrednost_st_premikov = ZMAGA//1500
     vrednost_st_pojej = ZMAGA//1000
 
-    
-    
+
     def vrednost_polja(self):
         # Oceni vrednost polja, glede na število figur, ki jih še imamo,
         # glede na število možnih premikov in možnih odvzemov nasprotnikove
         # figure.
         st_figur = 0
         st_figur_naspr = 0
-        #st_figur_nasp = 0
         dame = 0
         dame_naspr = 0
         for i in range(8):
@@ -337,7 +337,7 @@ class Minimax():
                     if self.igra.deska[j][i].dama:
                         dame +=1
                 elif self.igra.deska[j][i] == Figura(nasprotnik(self.igra.na_potezi)):
-                    st_figur += 1
+                    st_figur_naspr += 1
                     if self.igra.deska[j][i].dama:
                         dame_naspr += 1
                     
