@@ -4,9 +4,9 @@ from random import *
 
 CRNI = 'CRNI'
 BELI = 'BELI'
+NEVELJAVNO = 'NEVELJAVNO'
         
 NI_KONEC = "ni konec"
-GLOBINA = 3
 
 ###########################################
 ## Razred Clovek za igranje uporabnika:
@@ -89,6 +89,8 @@ class Figura():
         # Metoda za izpis objekta razreda Figura.
         return 'Figura(%s, %s, %s)' % (self.igralec, self.dama, self.indeks)
 
+    def kopija(self):
+        return Figura(self.igralec, dama=self.dama, indeks=self.indeks)
 
 
 ##########################
@@ -104,31 +106,41 @@ def nasprotnik(igralec):
     else:
         # Imamo le dva igralca, zato se ta možnost ne sme zgoditi.
         # Če se zgodi, je nekje napaka in program se prekine.
-        assert False, "Neveljaven nasprotnik"
+        assert False, "Neveljaven nasprotnik: {0}".format(igralec)
     
 
 
 class Igra():
     def __init__(self):
 
-        self.deska = [[Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False],
-                      [False, Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI)],
-                      [Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False, Figura(CRNI), False],
-                      [False,None,False,None,False,None,False,None],
-                      [None,False,None,False,None,False,None,False],
-                      [False, Figura(BELI), False, Figura(BELI),False, Figura(BELI), False, Figura(BELI)],
-                      [Figura(BELI), False, Figura(BELI), False, Figura(BELI), False, Figura(BELI), False],
-                      [False, Figura(BELI), False, Figura(BELI),False, Figura(BELI), False, Figura(BELI)]]
+        self.deska = [[Figura(CRNI), NEVELJAVNO, Figura(CRNI), NEVELJAVNO, Figura(CRNI), NEVELJAVNO, Figura(CRNI), NEVELJAVNO],
+                      [NEVELJAVNO, Figura(CRNI), NEVELJAVNO, Figura(CRNI), NEVELJAVNO, Figura(CRNI), NEVELJAVNO, Figura(CRNI)],
+                      [Figura(CRNI), NEVELJAVNO, Figura(CRNI), NEVELJAVNO, Figura(CRNI), NEVELJAVNO, Figura(CRNI), NEVELJAVNO],
+                      [NEVELJAVNO,None,NEVELJAVNO,None,NEVELJAVNO,None,NEVELJAVNO,None],
+                      [None,NEVELJAVNO,None,NEVELJAVNO,None,NEVELJAVNO,None,NEVELJAVNO],
+                      [NEVELJAVNO, Figura(BELI), NEVELJAVNO, Figura(BELI),NEVELJAVNO, Figura(BELI), NEVELJAVNO, Figura(BELI)],
+                      [Figura(BELI), NEVELJAVNO, Figura(BELI), NEVELJAVNO, Figura(BELI), NEVELJAVNO, Figura(BELI), NEVELJAVNO],
+                      [NEVELJAVNO, Figura(BELI), NEVELJAVNO, Figura(BELI),NEVELJAVNO, Figura(BELI), NEVELJAVNO, Figura(BELI)]]
         
         
         self.na_potezi = CRNI
         self.zgodovina = [(self.deska, CRNI)]
 
 
+    def kopija_figure(self, j, i):
+        fig = self.deska[j][i] 
+        if fig == NEVELJAVNO or fig == None:
+            return fig
+        else:
+            return self.deska[j][i].kopija()
+
+    def kopija_deske(self):
+        return [[self.kopija_figure(j,i) for i in range(8)] for j in range(8)]
+
     def shrani_potezo(self):
         # Seznamu zgodovina pripne par (trenutna pozicija na deski, igralec na potezi).
         # Potezo shranimo da lahko kličemo metodo razveljavi
-        a = [self.deska[j][:] for j in range(8)]
+        a = self.kopija_deske()
         self.zgodovina.append((a, self.na_potezi))
       
         
@@ -137,7 +149,7 @@ class Igra():
         # Ko algoritem razmišlja vnaprej, bi se Gui zmedel, saj bi se
         # nenehno menjavalo stanje igre.
         kopy = Igra()
-        kopy.deska = [self.deska[j][:] for j in range(8)]
+        kopy.deska = self.kopija_deske()
         kopy.na_potezi = self.na_potezi
         return kopy
     
@@ -161,7 +173,7 @@ class Igra():
         for j in range(8):
             for i in range(8):
                 # Pregledamo desko, gremo po vseh figurah.
-                if self.deska[j][i] != False and self.deska[j][i] != None:
+                if self.deska[j][i] != NEVELJAVNO and self.deska[j][i] != None:
                     # Preverimo, kateremu igralcu pripada figura na (j,i) mestu na deski.
                     if self.deska[j][i].igralec == igr :
                         # Ločimo primera, če je figura dama ali ne.
@@ -230,52 +242,34 @@ class Igra():
                    
     
     def naredi_potezo(self,p,r):
-    # Če je poteza neveljavna ne naredi ničesar,
-    # Če je poteza veljavna jo izvede
+    # Poteza mora biti veljavna
     
     # V argumentu p so podane stare koordinate (kjer figura stoji),
     # r pa so nove koordinate (kamor se hoče premakniti).
+        self.shrani_potezo()
         (p1,p2) = p
         (r1,r2) = r
         (pojej, premakni) = self.veljavne_poteze(self.na_potezi)
-                
-        for i in pojej:
-            if (p,r) == i:
-                # Če je poteza v seznamu pojej, potezo shrani in premakne figuro.
-                # Figuro nasprotnika, ki smo mu jo odvzeli pobrišemo s pomočjo
-                # metode zbrisi v razredu Gui, ki jo kličemo vedno, ko naredimo potezo.
-                self.shrani_potezo()
-                self.deska[r2][r1] = self.deska[p2][p1]
-                self.deska[p2][p1] = None
 
-                zmagovalec = self.stanje()
-                if zmagovalec == NI_KONEC:
-                    # Če igre še ni konec, je na vrsti nasprotnik.
-                    self.na_potezi = nasprotnik(self.na_potezi)
-                    
-                    
-                else:
-                    # Če je igre konec nam vrne zmagovalca.
-                    self.na_potezi = None
-                    
-                    return zmagovalec
-        for j in premakni:
-            if (p,r) == j:
-                # Če je poteza v seznamu premakni, potezo shrani in premakne figuro.
-                self.shrani_potezo()
-                self.deska[r2][r1] = self.deska[p2][p1]
-                self.deska[p2][p1] = None
-                
-                zmagovalec = self.stanje()
-                    
-                    
-                if zmagovalec == NI_KONEC:
-                    self.na_potezi = nasprotnik(self.na_potezi)
-                else:
-                    self.na_potezi = None
-                    return zmagovalec
-        return None
-                 
+        if abs (p1 - r1) == 1 and abs (p2 - r2) == 1:
+            # Se premikamo
+            self.deska[r2][r1] = self.deska[p2][p1]
+            self.deska[p2][p1] = None
+        elif abs (p1 - r1) == 2 and abs (p2 - r2) == 2:
+            # Jemljemo
+            self.deska[r2][r1] = self.deska[p2][p1]
+            self.deska[p2][p1] = None
+            b = (r2 + p2) // 2
+            a = (r1 + p1) // 2
+            self.deska[b][a] = None
+        else:
+            assert False, "neveljavna poteza {0}".format((p,r))
+        # Spremnimo ga v damo, če je treba
+        zeton = self.deska[r2][r1]
+        zeton.dama = (zeton.igralec == CRNI and r2 == 7) or (zeton.igralec == BELI and r2 == 0)
+        # Spremenimo, kdo je na potezi, če ni konec
+        if self.stanje() == NI_KONEC:
+            self.na_potezi = nasprotnik(self.na_potezi)
  
         
 #############################################################            

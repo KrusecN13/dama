@@ -5,6 +5,8 @@ from dama import *
 ## Razred Gui (uporabniški vmesnik) predstavlja našo aplikacijo:
 #################################################################
 
+GLOBINA = 4
+
 class Gui():
         # Oznake za grafične elemente v self.kanvas
 
@@ -49,26 +51,30 @@ class Gui():
                                                                              Racunalnik(self, Random(self))))
                 nova_igra_menu.add_command(label = "Clovek - Racunalnik (Minimax) ",
                                            command = lambda: self.zacni_igro(Clovek(self),
-                                                                             Racunalnik(self, Minimax(3))))
+                                                                             Racunalnik(self, Minimax(GLOBINA))))
+
+                nova_igra_menu.add_command(label = "Clovek - Racunalnik (Alpha-beta) ",
+                                           command = lambda: self.zacni_igro(Clovek(self),
+                                                                             Racunalnik(self, Alpha_beta(GLOBINA))))
 
                 
                 nova_igra_menu.add_command(label = "Racunalnik (Random) - Clovek ",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Random(self)),
                                                                              Clovek(self)))
                 nova_igra_menu.add_command(label = "Racunalnik (Minimax) - Clovek ",
-                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
+                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(GLOBINA)),
                                                                              Clovek(self)))
                 
-                nova_igra_menu.add_command(label = "Racunalnik(Minimax) - Racunalnik(Minimax)",
-                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
-                                                                             Racunalnik(self, Minimax(3))))
+                nova_igra_menu.add_command(label = "Racunalnik(Minimax) - Racunalnik(Alpha-beta)",
+                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(GLOBINA)),
+                                                                             Racunalnik(self, Alpha_beta(GLOBINA))))
 
-                nova_igra_menu.add_command(label = "Racunalnik(Minimax) - Racunalnik(Random)",
-                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(3)),
-                                                                             Racunalnik(self, Random(self))))
+                nova_igra_menu.add_command(label = "Racunalnik(Random) - Racunalnik(Alpha-beta)",
+                                           command = lambda: self.zacni_igro(Racunalnik(self, Random(self)),
+                                                                             Racunalnik(self, Alpha_beta(GLOBINA))))
                 nova_igra_menu.add_command(label = "Racunalnik(Random) - Racunalnik(Minimax)",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Random(self)),
-                                                                             Racunalnik(self, Minimax(3))))
+                                                                             Racunalnik(self, Minimax(GLOBINA))))
 
                # Pomoč pri igranju.
                 pomoc_menu.add_command(label = "Navodila igre:", command = lambda: self.navodila())
@@ -194,11 +200,10 @@ class Gui():
                         self.igrb.prekini()
                 
         def zbrisi_figuro(self,polje):
-                # Metoda, ki zbriše figuro iz self.kanvas in iz self.igra.deska
+                # Metoda, ki zbriše figuro iz self.kanvas
                 (a,b) = polje
                 self.kanvas.delete(self.igra.deska[b][a].indeks)
-                self.igra.deska[b][a] = None
-                
+
         
         
         def kanvas_klika(self, event):
@@ -300,58 +305,43 @@ class Gui():
                         self.kanvas.delete(Gui.TAG_KROG)
 
         def naredi_potezo(self,a,p):
+                # Poteza mora biti veljavna!
                 # a so stare koordinate, ki jih dobimo s klikom, p pa nove.
-
                 # Najprej povlečemo potezo v igri, nato na kanvasu.
-                ("prsu u naredi potezo, na potezi je:", self.igra.na_potezi)
                 (k,l) = a
                 (m,n) = p
+
+                # Preden potezo povlecemo, jo narisemo
                 id_1 = self.igra.deska[l][k].indeks
                 igralec = self.igra.na_potezi
                 (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
 
-                r = self.igra.naredi_potezo(a,p)
-
-                if igralec == CRNI:
-                        self.napis.set("Na potezi je BELI")
-                elif igralec == BELI:
-                        self.napis.set("Na potezi je CRNI")
                 if (a,p) in pojej:
-                        # Figuro premaknemo, nasprotnikovo pa zbrišemo.
-                        if n == 7 and nasprotnik(self.igra.na_potezi) == CRNI and self.igra.deska[n][m]:
-                                self.igra.deska[n][m].dama = True
-                        
-                        if n == 0 and nasprotnik(self.igra.na_potezi) == BELI and self.igra.deska[n][m]:
-                                self.igra.deska[n][m].dama = True
-                                
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
                         self.zbrisi_figuro(((m+k)//2,(l+n)//2))
-                        
-                        if self.igra.deska[n][m].dama:
-                        # Če je figura postala dama jo drugače obarvamo.
-                                if self.igra.deska[n][m].igralec == BELI:
-                                        self.kanvas.itemconfig(id_1, fill = "#66B2FF")
-                                elif self.igra.deska[n][m].igralec == CRNI:
-                                        self.kanvas.itemconfig(id_1, fill = "#660000")
+
                 elif (a,p) in premakni:
-                        # Figuro premaknemo.
-                        if n == 7 and nasprotnik(self.igra.na_potezi) == CRNI and self.igra.deska[n][m]:
-                                self.igra.deska[n][m].dama = True
-                        
-                        if n == 0 and nasprotnik(self.igra.na_potezi) == BELI and self.igra.deska[n][m]:
-                                self.igra.deska[n][m].dama = True
-                                
                         self.kanvas.coords(id_1,100*m +15,100*n + 15,100*m + 85,100*n+85)
-                        if self.igra.deska[n][m].dama:
+                else:
+                        assert False, "neveljavna poteza {0}".format((a,p))
+
+                # Povlecemo potezo na plosci
+                self.igra.naredi_potezo(a,p)
+
+                # Popravimo stanje igre
+                if igralec == BELI:
+                        self.napis.set("Na potezi je BELI")
+                elif igralec == CRNI:
+                        self.napis.set("Na potezi je ČRNI")
+
+                if self.igra.deska[n][m].dama:
                         # Če je figura postala dama jo drugače obarvamo.
-                                if self.igra.deska[n][m].igralec == BELI:
-                                        self.kanvas.itemconfig(id_1, fill = "#66B2FF")
-                                elif self.igra.deska[n][m].igralec == CRNI:
-                                        self.kanvas.itemconfig(id_1, fill = "#660000")
-                                        
-                if self.igra.stanje() != "ni konec":
-                        self.koncaj_igro(nasprotnik(self.igra.na_potezi))
-                #določi, ali mora računalnik kaj narediti glede na to, ali je na potezi
+                        if self.igra.deska[n][m].igralec == BELI:
+                                self.kanvas.itemconfig(id_1, fill = "#66B2FF")
+                        elif self.igra.deska[n][m].igralec == CRNI:
+                                self.kanvas.itemconfig(id_1, fill = "#660000")
+
+                # Določi, ali mora računalnik kaj narediti glede na to, ali je na potezi.
                 if self.igrc != Clovek(self) and self.igrb != Clovek(self):
                         if self.igra.na_potezi == BELI:
                                 self.igrb.igraj()
@@ -364,23 +354,12 @@ class Gui():
                         if self.igra.na_potezi == BELI:
                                 self.igrb.igraj()
 
-                
-                
-                
-
-                
-                
-                        
-                        
-                        
-        
-
-        
-            
-            
+                if self.igra.stanje() != NI_KONEC:
+                        self.koncaj_igro(self.igra.na_potezi)
 
 
- #GLAVNI PROGRAM
+
+#GLAVNI PROGRAM
 root = Tk()
 root.title("Dama")
 aplikacija = Gui(root)
