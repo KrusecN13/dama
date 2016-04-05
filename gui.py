@@ -17,13 +17,13 @@ class Gui():
         TAG_KROG = 'krog'
         
         def __init__(self, master = 0):
-                self.prenesene_poteze = [] # Veljavne poteze za po prvem kliku
+                self.prenesene_poteze = [] # Veljavne poteze za premik določen s prvim klikom.
                 self.opravljen_klik1 = False # Prvi klik je opravljen.
                 
                 self.igra = None # Objekt, ki predstavlja igro.
                 
-                self.igrc = None # Objekt, ki igra s crnimi figurami
-                self.igrb = None # Objekt, ki igra z belimi figurami
+                self.igrc = None # Objekt, ki igra s črnimi figurami.
+                self.igrb = None # Objekt, ki igra z belimi figurami.
 
 
                 # Ustvarimo meni.              
@@ -42,7 +42,7 @@ class Gui():
                 menu.add_cascade(label = "Izhod", menu = zapri_menu)
 
                 
-                #S klikom na orodno vrstico izberemo moznosti igralcev.
+                #S klikom na orodno vrstico izberemo možnosti igralcev.
                 nova_igra_menu.add_command(label = "Clovek - Clovek",
                                            command = lambda: self.zacni_igro(Clovek(self),
                                                                              Clovek(self)))
@@ -56,14 +56,6 @@ class Gui():
                 nova_igra_menu.add_command(label = "Clovek - Racunalnik (Alpha-beta) ",
                                            command = lambda: self.zacni_igro(Clovek(self),
                                                                              Racunalnik(self, Alpha_beta(GLOBINA))))
-
-                
-                nova_igra_menu.add_command(label = "Racunalnik (Random) - Clovek ",
-                                           command = lambda: self.zacni_igro(Racunalnik(self, Random(self)),
-                                                                             Clovek(self)))
-                nova_igra_menu.add_command(label = "Racunalnik (Minimax) - Clovek ",
-                                           command = lambda: self.zacni_igro(Racunalnik(self, Minimax(GLOBINA)),
-                                                                             Clovek(self)))
                 
                 nova_igra_menu.add_command(label = "Racunalnik(Minimax) - Racunalnik(Alpha-beta)",
                                            command = lambda: self.zacni_igro(Racunalnik(self, Minimax(GLOBINA)),
@@ -247,7 +239,7 @@ class Gui():
                         if len(pojej_iz_polja) > 0 or len(premakni_iz_polja) > 0:
                                 # Vse možne poteze označimo na kanvasu, da uporabnik lahko izbere,
                                 # katero bo naredil.
-                                #hkrati označimo veljavno figuro za potezo z rdečo obrobo
+                                # hkrati označimo veljavno figuro za potezo z rdečo obrobo
                                 self.id_1 = self.igra.deska[j][i].indeks
                                 self.kanvas.itemconfig(self.id_1, outline = "#FF0000")
                                 if len(pojej_iz_polja) > 0:
@@ -310,12 +302,13 @@ class Gui():
 
         def naredi_potezo(self,a,p):
                 # Poteza mora biti veljavna!
+                
                 # a so stare koordinate, ki jih dobimo s klikom, p pa nove.
                 # Najprej povlečemo potezo v igri, nato na kanvasu.
                 (k,l) = a
                 (m,n) = p
 
-                # Preden potezo povlecemo, jo narisemo
+                # Preden potezo povlečemo, jo narišemo.
                 id_1 = self.igra.deska[l][k].indeks
                 igralec = self.igra.na_potezi
                 (pojej,premakni) = self.igra.veljavne_poteze(self.igra.na_potezi)
@@ -329,10 +322,10 @@ class Gui():
                 else:
                         assert False, "neveljavna poteza {0}".format((a,p))
 
-                # Povlecemo potezo na plosci
+                # Povlečemo potezo na deski.
                 self.igra.naredi_potezo(a,p)
 
-                # Popravimo stanje igre
+                # Popravimo stanje igre.
                 if igralec == BELI:
                         self.napis.set("Na potezi je BELI")
                 elif igralec == CRNI:

@@ -18,15 +18,15 @@ class Clovek():
         
     def igraj(self):
         # Čakamo, da uporabnik klikne na ploščo, na kar nas
-        # opozori Gui preko metode kanvas_klika
+        # opozori Gui preko metode kanvas_klika.
         pass
 
     def prekini(self):
-        # Metoda za prekinitev razmišljanja, ki jo človek ignorira
+        # Metoda za prekinitev razmišljanja, ki jo človek ignorira.
         pass
 
     def klik(self,p):
-        # Naredimo potezo, če je veljavna
+        # Naredimo potezo, če je veljavna.
         self.gui.naredi_potezo(p[0], p[1])
         
 
@@ -41,7 +41,7 @@ class Racunalnik():
         self.vlakno = None
 
     def igraj(self):
-        # Vzporedno vlakno ki najde najboljso potezo na kopiji igre, da se Gui ne zmede.
+        # Vzporedno vlakno, ki najde najboljšo potezo na kopiji igre, da se Gui ne zmede.
         # Glavno vlakno, ki uporablja tkinter, preverja ali je bila poteza že
         # najdena (s pomočjo metode preveri).
         self.vlakno = threading.Thread(
@@ -62,10 +62,10 @@ class Racunalnik():
             self.gui.kanvas.after(100, self.preveri)
 
     def prekini(self):
-        # Gui kliče to metodo, če je potrebno prekiniti razmisljanje.
+        # Gui kliče to metodo, če je potrebno prekiniti razmišljanje.
         if self.vlakno:
-            # Algoritmu sporocimo, da preneha z razmišljanjem in
-            # pocakamo, da se ustavi.
+            # Algoritmu sporočimo, da preneha z razmišljanjem in
+            # počakamo, da se ustavi.
             logging.debug("Prekini {0}".format(self.vlakno))
             self.algoritem.prekini()
             self.vlakno.join()
@@ -139,7 +139,7 @@ class Igra():
 
     def shrani_potezo(self):
         # Seznamu zgodovina pripne par (trenutna pozicija na deski, igralec na potezi).
-        # Potezo shranimo da lahko kličemo metodo razveljavi
+        # Potezo shranimo da lahko kličemo metodo razveljavi.
         a = self.kopija_deske()
         self.zgodovina.append((a, self.na_potezi))
       
@@ -159,14 +159,14 @@ class Igra():
        
 
     def veljavne_poteze(self, igr):
-        # Argument igr pomeni igralca, za katerega nas zanimajo veljavne poteze
+        # Argument igr pomeni igralca, za katerega nas zanimajo veljavne poteze.
 
         # Vrne seznama vseh veljavnih potez za enega igralca, kjer je prvi
         # seznam pojej seznam vseh potez, ki odvzamejo nasprotniku figuro.
         # Drugi seznam je seznam vseh možnih premikov.
         smer = (1 if igr == CRNI else -1)
         # S smerjo je definirana smer, v kateri se premika igralec.
-        # Črni igralec se premika dol, beli pa gor.
+        # Črni igralec se premika dol, beli pa gor (po igralnem polju).
         
         premakni = []
         pojej = []
@@ -174,7 +174,7 @@ class Igra():
             for i in range(8):
                 # Pregledamo desko, gremo po vseh figurah.
                 if self.deska[j][i] != NEVELJAVNO and self.deska[j][i] != None:
-                    # Preverimo, kateremu igralcu pripada figura na (j,i) mestu na deski.
+                    # Preverimo, kateremu igralcu pripada figura na (j,i)-tem mestu na deski.
                     if self.deska[j][i].igralec == igr :
                         # Ločimo primera, če je figura dama ali ne.
                         # Če je dama, potem se lahko premika v vse smeri.
@@ -244,7 +244,7 @@ class Igra():
                    
     
     def naredi_potezo(self,p,r):
-    # Poteza mora biti veljavna
+    # Poteza mora biti veljavna.
     
     # V argumentu p so podane stare koordinate (kjer figura stoji),
     # r pa so nove koordinate (kamor se hoče premakniti).
@@ -266,10 +266,10 @@ class Igra():
             self.deska[b][a] = None
         else:
             assert False, "neveljavna poteza {0}".format((p,r))
-        # Spremnimo ga v damo, če je treba
+        # Spremenimo ga v damo, če je potrebno.
         zeton = self.deska[r2][r1]
         zeton.dama = zeton.dama or (zeton.igralec == CRNI and r2 == 7) or (zeton.igralec == BELI and r2 == 0)
-        # Spremenimo, kdo je na potezi, če ni konec
+        # Spremenimo, kdo je na potezi, če ni konec.
         if self.stanje() == NI_KONEC:
             self.na_potezi = nasprotnik(self.na_potezi)
  
@@ -279,7 +279,7 @@ class Igra():
 #############################################################
 
 class Minimax():
-    #Ta razred uporablja algoritem minimax, s pomočjo katerega
+    # Ta razred uporablja algoritem minimax, s pomočjo katerega
     # računalnik razmišlja.
     # Nima dostopa do glavnega vlakna, ki uporablja Gui,
     # saj deluje v vzporednem vlaknu.
@@ -303,7 +303,7 @@ class Minimax():
         self.prekinitev = False
         self.jaz = self.igra.na_potezi
         self.poteza = None
-        # Algoritem minimax nam najde potezo.
+        # Algoritem minimax najde potezo.
         (poteza,vrednost) = self.minimax(self.globina,True)
         self.jaz = None
         self.igra = None
@@ -314,45 +314,31 @@ class Minimax():
 
 
 
-    ZMAGA = 100000 #Vrednost zmage.
+    ZMAGA = 100000 # Vrednost zmage.
     NESKONCNO = ZMAGA + 100
-    vrednost_dame = ZMAGA//10
+    
     vrednost_st_figur = ZMAGA//100
-    vrednost_st_figur_naspr = - ZMAGA//100  
-    vrednost_st_premikov = ZMAGA//1500
-    vrednost_st_pojej = ZMAGA//1000
+    vrednost_st_figur_naspr = - ZMAGA//1000
 
 
     def vrednost_polja(self):
-        # Oceni vrednost polja, glede na število figur, ki jih še imamo,
-        # glede na število možnih premikov in možnih odvzemov nasprotnikove
-        # figure.
+        # Oceni vrednost polja, glede na število figur, ki jih še imamo in na
+        # število nasprotnikovih figur.
         st_figur = 0
         st_figur_naspr = 0
-        dame = 0
-        dame_naspr = 0
+        
         for i in range(8):
             for j in range(8):
                 if self.igra.deska[j][i] == Figura(self.igra.na_potezi):
                     st_figur += 1
-                    if self.igra.deska[j][i].dama:
-                        dame +=1
+                    
                 elif self.igra.deska[j][i] == Figura(nasprotnik(self.igra.na_potezi)):
                     st_figur_naspr += 1
-                    if self.igra.deska[j][i].dama:
-                        dame_naspr += 1
                     
-        (pojej1, premakni1) = self.igra.veljavne_poteze(self.igra.na_potezi)
-        st_pojej1 = len(pojej1)
-        st_premikov1 = len(premakni1)
 
-        (pojej2, premakni2) = self.igra.veljavne_poteze(nasprotnik(self.igra.na_potezi))
-        st_pojej2 = len(pojej2)
-        st_premikov2 = len(premakni2)
-
-        # vrednost = (Minimax.vrednost_st_figur * st_figur + Minimax.vrednost_st_premikov * st_premikov1 + Minimax.vrednost_st_pojej * st_pojej1 + Minimax.vrednost_dame * dame - Minimax.vrednost_st_figur * st_figur_naspr - Minimax.vrednost_st_premikov * st_premikov2 - Minimax.vrednost_st_pojej * st_pojej2 - Minimax.vrednost_dame * dame_naspr)
         vrednost = (Minimax.vrednost_st_figur * st_figur +
-                    Minimax.vrednost_st_figur_naspr * st_figur_naspr)    
+                    Minimax.vrednost_st_figur_naspr * st_figur_naspr)
+        
         return vrednost
 
 
@@ -500,9 +486,9 @@ class Alpha_beta():
     
     
     def vrednost_polja(self):
-        # Oceni vrednost polja, glede na število figur, ki jih še imamo,
+        # Oceni vrednost polja, glede na število figur in posebej število dam ter
         # glede na število možnih premikov in možnih odvzemov nasprotnikove
-        # figure.
+        # figure preko metode veljavne_poteze.
         st_figur = 0
         st_figur_naspr = 0
         dame = 0
@@ -526,7 +512,7 @@ class Alpha_beta():
         st_pojej2 = len(pojej2)
         st_premikov2 = len(premakni2)
 
-        vrednost = (Minimax.vrednost_st_figur * st_figur + Minimax.vrednost_st_premikov * st_premikov1 + Minimax.vrednost_st_pojej * st_pojej1 + Minimax.vrednost_dame * dame - Minimax.vrednost_st_figur * st_figur_naspr - Minimax.vrednost_st_premikov * st_premikov2 - Minimax.vrednost_st_pojej * st_pojej2 - Minimax.vrednost_dame * dame_naspr)
+        vrednost = (Alpha_beta.vrednost_st_figur * st_figur + Alpha_beta.vrednost_st_premikov * st_premikov1 + Alpha_beta.vrednost_st_pojej * st_pojej1 + Alpha_beta.vrednost_dame * dame - Alpha_beta.vrednost_st_figur * st_figur_naspr - Alpha_beta.vrednost_st_premikov * st_premikov2 - Alpha_beta.vrednost_st_pojej * st_pojej2 - Alpha_beta.vrednost_dame * dame_naspr)
         
         return vrednost
 
@@ -538,7 +524,7 @@ class Alpha_beta():
         self.prekinitev = False
         self.jaz = self.igra.na_potezi
         self.poteza = None
-        # Algoritem alpha-beta nam najde potezo.
+        # Algoritem alpha-beta najde potezo.
         (poteza, vrednost) = self.alpha_beta(self.globina, True, -Alpha_beta.NESKONCNO, Alpha_beta.NESKONCNO)
         self.jaz = None
         self.igra = None
