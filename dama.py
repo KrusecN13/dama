@@ -268,7 +268,7 @@ class Igra():
             assert False, "neveljavna poteza {0}".format((p,r))
         # Spremnimo ga v damo, če je treba
         zeton = self.deska[r2][r1]
-        zeton.dama = (zeton.igralec == CRNI and r2 == 7) or (zeton.igralec == BELI and r2 == 0)
+        zeton.dama = zeton.dama or (zeton.igralec == CRNI and r2 == 7) or (zeton.igralec == BELI and r2 == 0)
         # Spremenimo, kdo je na potezi, če ni konec
         if self.stanje() == NI_KONEC:
             self.na_potezi = nasprotnik(self.na_potezi)
@@ -317,7 +317,8 @@ class Minimax():
     ZMAGA = 100000 #Vrednost zmage.
     NESKONCNO = ZMAGA + 100
     vrednost_dame = ZMAGA//10
-    vrednost_st_figur = ZMAGA//100  
+    vrednost_st_figur = ZMAGA//100
+    vrednost_st_figur_naspr = - ZMAGA//100  
     vrednost_st_premikov = ZMAGA//1500
     vrednost_st_pojej = ZMAGA//1000
 
@@ -349,8 +350,9 @@ class Minimax():
         st_pojej2 = len(pojej2)
         st_premikov2 = len(premakni2)
 
-        vrednost = (Minimax.vrednost_st_figur * st_figur + Minimax.vrednost_st_premikov * st_premikov1 + Minimax.vrednost_st_pojej * st_pojej1 + Minimax.vrednost_dame * dame - Minimax.vrednost_st_figur * st_figur_naspr - Minimax.vrednost_st_premikov * st_premikov2 - Minimax.vrednost_st_pojej * st_pojej2 - Minimax.vrednost_dame * dame_naspr)
-        
+        # vrednost = (Minimax.vrednost_st_figur * st_figur + Minimax.vrednost_st_premikov * st_premikov1 + Minimax.vrednost_st_pojej * st_pojej1 + Minimax.vrednost_dame * dame - Minimax.vrednost_st_figur * st_figur_naspr - Minimax.vrednost_st_premikov * st_premikov2 - Minimax.vrednost_st_pojej * st_pojej2 - Minimax.vrednost_dame * dame_naspr)
+        vrednost = (Minimax.vrednost_st_figur * st_figur +
+                    Minimax.vrednost_st_figur_naspr * st_figur_naspr)    
         return vrednost
 
 
